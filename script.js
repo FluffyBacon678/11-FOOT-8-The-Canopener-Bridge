@@ -222,12 +222,15 @@ function boolFromWallpaper(value) {
 }
 
 function modeFromValue(value) {
-  return value === "video" || value === "latest" ? "video" : "live";
+  const normalized = String(value || "").trim().toLowerCase();
+  if (["video", "latest", "fallback", "archive", "offline"].includes(normalized)) return "video";
+  if (["image", "still", "photo", "offline-image"].includes(normalized)) return "image";
+  return "live";
 }
 
 function getFallbackVideoTitle(videoId) {
   const normalized = sanitizeVideoId(videoId, "");
-  return FALLBACK_VIDEOS.find((video) => video.id === normalized)?.title || "Custom fallback recording";
+  return FALLBACK_VIDEOS.find((video) => video.id === normalized)?.title || "Custom offline recording";
 }
 
 function getVisualSettings() {
@@ -236,6 +239,10 @@ function getVisualSettings() {
 }
 
 function buildEmbedUrl() {
+  if (state.mode === "image") {
+    return "about:blank";
+  }
+
   const params = new URLSearchParams({
     autoplay: "1",
     mute: state.muted ? "1" : "0",
@@ -293,6 +300,7 @@ function applyVisualState() {
   document.body.classList.toggle("no-strip", !visual.showStrip);
   document.body.classList.toggle("strip-compact", visual.stripDensity === "compact");
   document.body.classList.toggle("is-fallback", state.mode === "video");
+  document.body.classList.toggle("is-image", state.mode === "image");
   for (const accent of ACCENTS) {
     document.body.classList.toggle(`accent-${accent}`, state.accent === accent);
   }
@@ -302,14 +310,18 @@ function applyVisualState() {
 
   if (state.mode === "video") {
     modeLabel.textContent = state.fallbackSource === "random"
-      ? "Random yovo68 archive"
-      : "Custom fallback video";
-    signalHeading.textContent = "Fallback";
+      ? "Offline archive"
+      : "Custom offline video";
+    signalHeading.textContent = "Archive";
     signalLabel.textContent = state.fallbackSource === "random"
       ? state.randomVideoTitle
       : getFallbackVideoTitle(state.videoId);
+  } else if (state.mode === "image") {
+    modeLabel.textContent = "Offline still image";
+    signalHeading.textContent = "Mode";
+    signalLabel.textContent = "Wikimedia bridge photo";
   } else {
-    modeLabel.textContent = "Live channel";
+    modeLabel.textContent = "Live stream";
     signalHeading.textContent = "Signal";
     signalLabel.textContent = "Waiting for live feed";
   }

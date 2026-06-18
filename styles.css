@@ -81,6 +81,25 @@ body.accent-red {
   pointer-events: none;
 }
 
+.offline-image {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+
+body.is-image .offline-image {
+  opacity: 1;
+}
+
+body.is-image .video-frame iframe {
+  display: none;
+}
+
 body.controls-enabled .video-frame iframe {
   pointer-events: auto;
 }
@@ -101,6 +120,10 @@ body.controls-enabled .video-frame iframe {
 .video-frame.fit-contain iframe {
   position: static;
   transform: none;
+}
+
+.video-frame.fit-contain .offline-image {
+  object-fit: contain;
 }
 
 .ambient {

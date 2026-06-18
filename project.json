@@ -1,6 +1,6 @@
 {
-  "title": "11 Foot 8 - Canopener Bridge Live",
-  "description": "A Wallpaper Engine web wallpaper for the 11foot8+8 Canopener Bridge in Durham, NC. Uses the yovo68 YouTube live channel when available, with a rotating official yovo68 archive fallback. Credit: Jurgen Henn / 11foot8.com / yovo68.",
+  "title": "11 Foot 8 - Canopener Bridge Live & Offline",
+  "description": "A Wallpaper Engine web wallpaper for the 11foot8+8 Canopener Bridge in Durham, NC. Choose the yovo68 YouTube live stream, rotating official yovo68 archive videos, or a local still image for offline display. Credit: Jurgen Henn / 11foot8.com / yovo68. Preview/offline photo: Washuotaku, CC BY-SA 4.0, via Wikimedia Commons.",
   "type": "web",
   "file": "index.html",
   "preview": "preview.jpg",
@@ -16,23 +16,24 @@
     "properties": {
       "streammode": {
         "order": 10,
-        "text": "Stream mode",
+        "text": "Playback mode",
         "type": "combo",
         "value": "live",
         "options": [
-          { "label": "Live channel", "value": "live" },
-          { "label": "Loop fallback video", "value": "video" }
+          { "label": "Live stream", "value": "live" },
+          { "label": "Offline archive video", "value": "video" },
+          { "label": "Offline still image", "value": "image" }
         ]
       },
       "videoid": {
         "order": 20,
-        "text": "Custom fallback YouTube video ID",
+        "text": "Custom offline YouTube video ID",
         "type": "textinput",
         "value": "-CmDZ-oEtB0"
       },
       "fallbacksource": {
         "order": 25,
-        "text": "Fallback source",
+        "text": "Offline archive source",
         "type": "combo",
         "value": "random",
         "options": [
@@ -42,13 +43,13 @@
       },
       "autorotatefallback": {
         "order": 26,
-        "text": "Auto-rotate random fallback",
+        "text": "Auto-rotate offline archives",
         "type": "bool",
         "value": true
       },
       "fallbackrotateminutes": {
         "order": 27,
-        "text": "Fallback rotation minutes",
+        "text": "Offline archive rotation minutes",
         "type": "slider",
         "value": 20,
         "min": 5,
