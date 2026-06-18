@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 96" role="img" aria-label="Overheight warning sign">
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#000" flood-opacity=".45"/>
+    </filter>
+  </defs>
+  <g filter="url(#shadow)">
+    <path d="M60 4 116 92H4Z" fill="#f5bf25" stroke="#11100d" stroke-width="8" stroke-linejoin="round"/>
+    <path d="M60 19 101 84H19Z" fill="none" stroke="#11100d" stroke-width="4" stroke-linejoin="round"/>
+    <rect x="54" y="34" width="12" height="28" rx="3" fill="#11100d"/>
+    <circle cx="60" cy="73" r="6" fill="#11100d"/>
+  </g>
+</svg>

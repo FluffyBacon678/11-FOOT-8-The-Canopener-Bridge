@@ -1,0 +1,214 @@
+{
+  "title": "11 Foot 8 - Canopener Bridge Live",
+  "description": "A Wallpaper Engine web wallpaper for the 11foot8+8 Canopener Bridge in Durham, NC. Uses the yovo68 YouTube live channel when available, with a rotating official yovo68 archive fallback. Credit: Jurgen Henn / 11foot8.com / yovo68.",
+  "type": "web",
+  "file": "index.html",
+  "preview": "preview.jpg",
+  "contentrating": "Everyone",
+  "ratingsex": "none",
+  "ratingviolence": "none",
+  "tags": [
+    "Technology",
+    "Relaxing"
+  ],
+  "version": 1,
+  "general": {
+    "properties": {
+      "streammode": {
+        "order": 10,
+        "text": "Stream mode",
+        "type": "combo",
+        "value": "live",
+        "options": [
+          { "label": "Live channel", "value": "live" },
+          { "label": "Loop fallback video", "value": "video" }
+        ]
+      },
+      "videoid": {
+        "order": 20,
+        "text": "Custom fallback YouTube video ID",
+        "type": "textinput",
+        "value": "-CmDZ-oEtB0"
+      },
+      "fallbacksource": {
+        "order": 25,
+        "text": "Fallback source",
+        "type": "combo",
+        "value": "random",
+        "options": [
+          { "label": "Random verified 30s+ video", "value": "random" },
+          { "label": "Custom video ID", "value": "custom" }
+        ]
+      },
+      "autorotatefallback": {
+        "order": 26,
+        "text": "Auto-rotate random fallback",
+        "type": "bool",
+        "value": true
+      },
+      "fallbackrotateminutes": {
+        "order": 27,
+        "text": "Fallback rotation minutes",
+        "type": "slider",
+        "value": 20,
+        "min": 5,
+        "max": 90
+      },
+      "channelid": {
+        "order": 30,
+        "text": "YouTube channel ID",
+        "type": "textinput",
+        "value": "UCXX0RWOIBjt4o3ziHu-6a5A"
+      },
+      "videofit": {
+        "order": 40,
+        "text": "Video fit",
+        "type": "combo",
+        "value": "cover",
+        "options": [
+          { "label": "Cover screen", "value": "cover" },
+          { "label": "Show full frame", "value": "contain" }
+        ]
+      },
+      "youtubecontrols": {
+        "order": 50,
+        "text": "Enable YouTube controls",
+        "type": "bool",
+        "value": false
+      },
+      "muted": {
+        "order": 60,
+        "text": "Mute YouTube audio",
+        "type": "bool",
+        "value": true
+      },
+      "showoverlay": {
+        "order": 100,
+        "text": "Show all overlay",
+        "type": "bool",
+        "value": true
+      },
+      "overlaypreset": {
+        "order": 105,
+        "text": "Overlay preset",
+        "type": "combo",
+        "value": "compact",
+        "options": [
+          { "label": "Compact", "value": "compact" },
+          { "label": "Clean", "value": "clean" },
+          { "label": "Info", "value": "info" },
+          { "label": "Minimal", "value": "minimal" },
+          { "label": "Full", "value": "full" },
+          { "label": "Cinema", "value": "cinema" },
+          { "label": "Custom sliders", "value": "custom" }
+        ]
+      },
+      "overlayposition": {
+        "order": 106,
+        "text": "Overlay position",
+        "type": "combo",
+        "value": "split",
+        "options": [
+          { "label": "Split top/bottom", "value": "split" },
+          { "label": "Top left", "value": "top-left" },
+          { "label": "Top right", "value": "top-right" },
+          { "label": "Bottom left", "value": "bottom-left" },
+          { "label": "Bottom right", "value": "bottom-right" }
+        ]
+      },
+      "showtitle": {
+        "order": 110,
+        "text": "Show title",
+        "type": "bool",
+        "value": true
+      },
+      "showclock": {
+        "order": 120,
+        "text": "Show clock",
+        "type": "bool",
+        "value": true
+      },
+      "showinfostrip": {
+        "order": 130,
+        "text": "Show info strip",
+        "type": "bool",
+        "value": true
+      },
+      "overlayopacity": {
+        "order": 140,
+        "text": "Overlay opacity",
+        "type": "slider",
+        "value": 100,
+        "min": 0,
+        "max": 100
+      },
+      "panelopacity": {
+        "order": 150,
+        "text": "Panel opacity",
+        "type": "slider",
+        "value": 78,
+        "min": 35,
+        "max": 100
+      },
+      "uiscale": {
+        "order": 160,
+        "text": "UI scale",
+        "type": "slider",
+        "value": 82,
+        "min": 70,
+        "max": 130
+      },
+      "edgepadding": {
+        "order": 170,
+        "text": "Edge padding",
+        "type": "slider",
+        "value": 26,
+        "min": 8,
+        "max": 72
+      },
+      "accentstyle": {
+        "order": 180,
+        "text": "Accent style",
+        "type": "combo",
+        "value": "hazard",
+        "options": [
+          { "label": "Hazard yellow", "value": "hazard" },
+          { "label": "Signal green", "value": "signal" },
+          { "label": "Bridge steel", "value": "steel" },
+          { "label": "Warning red", "value": "red" }
+        ]
+      },
+      "clocktimezone": {
+        "order": 190,
+        "text": "Clock timezone",
+        "type": "combo",
+        "value": "America/New_York",
+        "options": [
+          { "label": "Bridge time", "value": "America/New_York" },
+          { "label": "Local time", "value": "local" },
+          { "label": "UTC", "value": "UTC" }
+        ]
+      },
+      "clockformat": {
+        "order": 200,
+        "text": "Clock format",
+        "type": "combo",
+        "value": "24",
+        "options": [
+          { "label": "24 hour", "value": "24" },
+          { "label": "12 hour", "value": "12" }
+        ]
+      },
+      "stripdensity": {
+        "order": 210,
+        "text": "Info strip density",
+        "type": "combo",
+        "value": "compact",
+        "options": [
+          { "label": "Normal", "value": "normal" },
+          { "label": "Compact", "value": "compact" }
+        ]
+      }
+    }
+  }
+}

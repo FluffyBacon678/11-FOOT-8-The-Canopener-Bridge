@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#11100d">
+    <title>11 Foot 8 - Canopener Bridge Live</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="wallpaper" aria-label="11 Foot 8 Canopener Bridge live wallpaper">
+      <div class="video-frame" id="videoFrame">
+        <iframe
+          id="bridgeStream"
+          title="11 Foot 8 bridge stream"
+          src="about:blank"
+          allow="autoplay; encrypted-media; picture-in-picture"
+          referrerpolicy="strict-origin-when-cross-origin">
+        </iframe>
+      </div>
+
+      <div class="ambient" aria-hidden="true">
+        <div class="ambient-grid"></div>
+        <div class="signal signal-red"></div>
+        <div class="signal signal-amber"></div>
+      </div>
+
+      <section class="overlay" id="overlay">
+        <header class="topline" id="topline">
+          <div class="brand-lockup" id="brandLockup">
+            <img src="assets/warning-sign.svg" alt="" class="warning-mark">
+            <div>
+              <p class="eyebrow" id="modeLabel">Live channel</p>
+              <h1>11 Foot 8 + 8</h1>
+            </div>
+          </div>
+          <time class="clock" id="clock" datetime="">--:--</time>
+        </header>
+
+        <footer class="bridge-strip" id="bridgeStrip">
+          <div>
+            <span>Norfolk Southern - Gregson Street Overpass</span>
+            <strong>Durham, NC</strong>
+          </div>
+          <div>
+            <span>Clearance</span>
+            <strong>12 ft 4 in</strong>
+          </div>
+          <div>
+            <span id="signalHeading">Signal</span>
+            <strong id="signalLabel">Waiting for live feed</strong>
+          </div>
+          <div>
+            <span>Credit</span>
+            <strong>11foot8.com / yovo68</strong>
+          </div>
+        </footer>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
