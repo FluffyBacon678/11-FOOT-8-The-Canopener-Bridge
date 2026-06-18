@@ -10,15 +10,17 @@ This folder is a Wallpaper Engine web wallpaper for the 11foot8+8 Canopener Brid
 4. Select `index.html` from this folder.
 5. Save/apply the project.
 
-The default playback mode embeds the yovo68 YouTube channel live endpoint:
+The default playback mode is **Offline still image (safe)** so the wallpaper can open in Wallpaper Engine even on systems where YouTube embeds make CEF unstable.
+
+Switch **Playback mode** to **Live stream (YouTube)** to embed the yovo68 YouTube channel live endpoint:
 
 ```text
 https://www.youtube.com/embed/live_stream?channel=UCXX0RWOIBjt4o3ziHu-6a5A
 ```
 
-If YouTube reports that there is no active public live event, switch **Playback mode** to **Offline archive video**. The default offline archive source picks one random official yovo68 video from a built-in pool of verified 30s+ videos each time the wallpaper loads.
+If YouTube reports that there is no active public live event, switch **Playback mode** to **Offline archive video (YouTube)**. The default offline archive source picks one random official yovo68 video from a built-in pool of verified 30s+ videos each time the wallpaper loads.
 
-For a no-video local mode, switch **Playback mode** to **Offline still image**. That mode uses the bundled bridge photo at `assets/bridge-still.jpg`.
+For a no-video local mode, keep **Playback mode** on **Offline still image (safe)**. That mode uses the bundled bridge photo at `assets/bridge-still.jpg`.
 
 The custom fallback video ID defaults to the 2020 compilation:
 
@@ -49,6 +51,12 @@ Switch **Offline archive source** to **Custom video ID** if you want to always u
 - **Accent style**: switches the overlay accent color.
 - **Clock timezone / format**: bridge time, local time, or UTC in 12/24 hour format.
 - **Info strip density**: normal or compact bottom strip.
+
+## Stability Notes
+
+The live stream and archive video modes use an embedded YouTube player. On some Wallpaper Engine / GPU / CEF combinations, external video embeds can crash the Chromium renderer and show the sad-face page. This project now starts in local still-image mode, removes GPU-heavy blur/backdrop CSS, and delays YouTube loading when switching modes.
+
+If the sad face still appears, reload the wallpaper and switch **Playback mode** back to **Offline still image (safe)** before trying live/archive again.
 
 ## Workshop Package
 

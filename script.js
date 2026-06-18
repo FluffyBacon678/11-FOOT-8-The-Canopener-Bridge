@@ -6,7 +6,7 @@ const DEFAULTS = {
   rotateMinutes: 20,
   overlayPreset: "compact",
   overlayPosition: "split",
-  mode: "live",
+  mode: "image",
   fit: "cover",
   controls: false,
   overlay: true,
@@ -150,12 +150,14 @@ const signalHeading = document.querySelector("#signalHeading");
 const signalLabel = document.querySelector("#signalLabel");
 const clock = document.querySelector("#clock");
 let lastRotationAt = Date.now();
+let streamLoadTimer = 0;
 
 const ACCENTS = ["hazard", "signal", "steel", "red"];
 const CLOCK_ZONES = ["America/New_York", "local", "UTC"];
 const FALLBACK_SOURCES = ["random", "custom"];
 const OVERLAY_PRESETS = ["custom", ...Object.keys(PRESETS)];
 const OVERLAY_POSITIONS = ["split", "top-left", "top-right", "bottom-left", "bottom-right"];
+const EXTERNAL_STREAM_LOAD_DELAY_MS = 1200;
 
 function sanitizeId(value, fallback) {
   const trimmed = String(value || "").trim();
@@ -331,6 +333,38 @@ function applyVisualState() {
 
 function refreshStream(force = false) {
   const nextUrl = buildEmbedUrl();
+
+  if (streamLoadTimer) {
+    window.clearTimeout(streamLoadTimer);
+    streamLoadTimer = 0;
+  }
+
+  if (state.mode === "image") {
+    if (force || stream.getAttribute("src") !== "about:blank") {
+      stream.src = "about:blank";
+    }
+    applyVisualState();
+    return;
+  }
+
+  if (force || stream.src !== nextUrl) {
+    stream.src = "about:blank";
+    streamLoadTimer = window.setTimeout(() => {
+      streamLoadTimer = 0;
+      stream.src = nextUrl;
+    }, EXTERNAL_STREAM_LOAD_DELAY_MS);
+  }
+
+  applyVisualState();
+}
+
+function refreshStreamImmediately(force = false) {
+  if (streamLoadTimer) {
+    window.clearTimeout(streamLoadTimer);
+    streamLoadTimer = 0;
+  }
+
+  const nextUrl = buildEmbedUrl();
   if (force || stream.src !== nextUrl) {
     stream.src = nextUrl;
   }
@@ -446,7 +480,7 @@ function rotateRandomFallback() {
 
 Object.assign(state, getQueryOverrides());
 state.mode = modeFromValue(state.mode);
-refreshStream(true);
+refreshStreamImmediately(true);
 updateClock();
 setInterval(updateClock, 1000 * 20);
 setInterval(() => {

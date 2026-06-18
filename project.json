@@ -1,6 +1,6 @@
 {
   "title": "11 Foot 8 - Canopener Bridge Live & Offline",
-  "description": "A Wallpaper Engine web wallpaper for the 11foot8+8 Canopener Bridge in Durham, NC. Choose the yovo68 YouTube live stream, rotating official yovo68 archive videos, or a local still image for offline display. Credit: Jurgen Henn / 11foot8.com / yovo68. Preview/offline photo: Washuotaku, CC BY-SA 4.0, via Wikimedia Commons.",
+  "description": "A Wallpaper Engine web wallpaper for the 11foot8+8 Canopener Bridge in Durham, NC. Starts in a CEF-safe local still-image mode; choose the yovo68 YouTube live stream or rotating official yovo68 archive videos in settings. Credit: Jurgen Henn / 11foot8.com / yovo68. Preview/offline photo: Washuotaku, CC BY-SA 4.0, via Wikimedia Commons.",
   "type": "web",
   "file": "index.html",
   "preview": "preview.jpg",
@@ -18,11 +18,11 @@
         "order": 10,
         "text": "Playback mode",
         "type": "combo",
-        "value": "live",
+        "value": "image",
         "options": [
-          { "label": "Live stream", "value": "live" },
-          { "label": "Offline archive video", "value": "video" },
-          { "label": "Offline still image", "value": "image" }
+          { "label": "Offline still image (safe)", "value": "image" },
+          { "label": "Live stream (YouTube)", "value": "live" },
+          { "label": "Offline archive video (YouTube)", "value": "video" }
         ]
       },
       "videoid": {
