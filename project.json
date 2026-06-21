@@ -1,6 +1,6 @@
 {
   "title": "11 Foot 8 - Canopener Bridge Crash Reel",
-  "description": "A Wallpaper Engine web wallpaper for the 11foot8+8 Canopener Bridge in Durham, NC. Defaults to a rotating yovo68 archive crash compilation with intro skipping, with optional random archive, custom video, still image, or legacy live stream modes. Credit: Jurgen Henn / 11foot8.com / yovo68. Preview/offline photo: Washuotaku, CC BY-SA 4.0, via Wikimedia Commons.",
+  "description": "A Wallpaper Engine web wallpaper for the 11foot8+8 Canopener Bridge in Durham, NC. Defaults to a rotating yovo68 archive crash compilation with intro skipping, with optional random archive, custom video, or local still image modes. Credit: Jurgen Henn / 11foot8.com / yovo68. Preview/local still photo: Washuotaku, CC BY-SA 4.0, via Wikimedia Commons.",
   "type": "web",
   "file": "index.html",
   "preview": "preview.jpg",
@@ -20,20 +20,19 @@
         "type": "combo",
         "value": "video",
         "options": [
-          { "label": "Offline crash archive (YouTube)", "value": "video" },
-          { "label": "Offline still image (safe)", "value": "image" },
-          { "label": "Legacy live stream (YouTube)", "value": "live" }
+          { "label": "Crash archive reel (YouTube)", "value": "video" },
+          { "label": "Local still image (safe)", "value": "image" }
         ]
       },
       "videoid": {
         "order": 20,
-        "text": "Custom offline YouTube video ID",
+        "text": "Custom archive YouTube video ID",
         "type": "textinput",
         "value": "-CmDZ-oEtB0"
       },
       "fallbacksource": {
         "order": 25,
-        "text": "Offline archive source",
+        "text": "Archive source",
         "type": "combo",
         "value": "compilation",
         "options": [
@@ -44,13 +43,13 @@
       },
       "autorotatefallback": {
         "order": 26,
-        "text": "Auto-rotate offline archives",
+        "text": "Auto-rotate archive videos",
         "type": "bool",
         "value": true
       },
       "fallbackrotateminutes": {
         "order": 27,
-        "text": "Offline archive rotation minutes",
+        "text": "Archive rotation minutes",
         "type": "slider",
         "value": 20,
         "min": 5,
@@ -69,12 +68,6 @@
         "value": 4,
         "min": 0,
         "max": 90
-      },
-      "channelid": {
-        "order": 30,
-        "text": "YouTube channel ID",
-        "type": "textinput",
-        "value": "UCXX0RWOIBjt4o3ziHu-6a5A"
       },
       "videofit": {
         "order": 40,

@@ -1,5 +1,4 @@
 const DEFAULTS = {
-  channelId: "UCXX0RWOIBjt4o3ziHu-6a5A",
   videoId: "-CmDZ-oEtB0",
   fallbackSource: "compilation",
   rotateFallback: true,
@@ -238,7 +237,6 @@ function getQueryOverrides() {
   if (params.has("customstart")) overrides.customStartSeconds = numberInRange(params.get("customstart"), 0, 90, DEFAULTS.customStartSeconds);
   if (params.has("preset")) overrides.overlayPreset = optionFromValue(params.get("preset"), OVERLAY_PRESETS, DEFAULTS.overlayPreset);
   if (params.has("position")) overrides.overlayPosition = optionFromValue(params.get("position"), OVERLAY_POSITIONS, DEFAULTS.overlayPosition);
-  if (params.has("channel")) overrides.channelId = params.get("channel");
   if (params.has("fit")) overrides.fit = params.get("fit");
   if (params.has("controls")) overrides.controls = boolFromValue(params.get("controls"), DEFAULTS.controls);
   if (params.has("muted")) overrides.muted = boolFromValue(params.get("muted"), DEFAULTS.muted);
@@ -263,14 +261,13 @@ function boolFromWallpaper(value) {
 
 function modeFromValue(value) {
   const normalized = String(value || "").trim().toLowerCase();
-  if (["video", "latest", "fallback", "archive", "offline"].includes(normalized)) return "video";
-  if (["image", "still", "photo", "offline-image"].includes(normalized)) return "image";
-  return "live";
+  if (["image", "still", "photo", "local-image"].includes(normalized)) return "image";
+  return "video";
 }
 
 function getFallbackVideoTitle(videoId) {
   const normalized = sanitizeVideoId(videoId, "");
-  return FALLBACK_VIDEOS.find((video) => video.id === normalized)?.title || "Custom offline recording";
+  return FALLBACK_VIDEOS.find((video) => video.id === normalized)?.title || "Custom archive recording";
 }
 
 function getFallbackVideo(videoId) {
@@ -355,8 +352,7 @@ function buildEmbedUrl() {
     return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
   }
 
-  params.set("channel", sanitizeId(state.channelId, DEFAULTS.channelId));
-  return `https://www.youtube.com/embed/live_stream?${params.toString()}`;
+  return "about:blank";
 }
 
 function applyVisualState() {
@@ -406,18 +402,14 @@ function applyVisualState() {
       signalHeading.textContent = "Archive";
       signalLabel.textContent = video.title;
     } else {
-      modeLabel.textContent = "Custom offline video";
+      modeLabel.textContent = "Custom archive video";
       signalHeading.textContent = "Archive";
       signalLabel.textContent = getFallbackVideoTitle(state.videoId);
     }
   } else if (state.mode === "image") {
-    modeLabel.textContent = "Offline still image";
+    modeLabel.textContent = "Local still image";
     signalHeading.textContent = "Mode";
     signalLabel.textContent = "Wikimedia bridge photo";
-  } else {
-    modeLabel.textContent = "Live stream";
-    signalHeading.textContent = "Signal";
-    signalLabel.textContent = "Waiting for live feed";
   }
 
   updateClock();
@@ -501,9 +493,6 @@ function applyWallpaperProperties(properties) {
   }
   if (properties.overlayposition) {
     state.overlayPosition = optionFromValue(properties.overlayposition.value, OVERLAY_POSITIONS, DEFAULTS.overlayPosition);
-  }
-  if (properties.channelid) {
-    state.channelId = sanitizeId(properties.channelid.value, DEFAULTS.channelId);
   }
   if (properties.videofit) {
     state.fit = properties.videofit.value === "contain" ? "contain" : "cover";

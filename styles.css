@@ -81,7 +81,7 @@ body.accent-red {
   pointer-events: none;
 }
 
-.offline-image {
+.local-still-image {
   position: absolute;
   inset: 0;
   z-index: 0;
@@ -91,7 +91,7 @@ body.accent-red {
   opacity: 0;
 }
 
-body.is-image .offline-image {
+body.is-image .local-still-image {
   opacity: 1;
 }
 
@@ -121,7 +121,7 @@ body.controls-enabled .video-frame iframe {
   transform: none;
 }
 
-.video-frame.fit-contain .offline-image {
+.video-frame.fit-contain .local-still-image {
   object-fit: contain;
 }
 
