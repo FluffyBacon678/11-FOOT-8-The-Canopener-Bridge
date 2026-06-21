@@ -1,6 +1,6 @@
 {
-  "title": "11 Foot 8 - Canopener Bridge Live & Offline",
-  "description": "A Wallpaper Engine web wallpaper for the 11foot8+8 Canopener Bridge in Durham, NC. Starts in a CEF-safe local still-image mode; choose the yovo68 YouTube live stream or rotating official yovo68 archive videos in settings. Credit: Jurgen Henn / 11foot8.com / yovo68. Preview/offline photo: Washuotaku, CC BY-SA 4.0, via Wikimedia Commons.",
+  "title": "11 Foot 8 - Canopener Bridge Crash Reel",
+  "description": "A Wallpaper Engine web wallpaper for the 11foot8+8 Canopener Bridge in Durham, NC. Defaults to a rotating yovo68 archive crash compilation with intro skipping, with optional random archive, custom video, still image, or legacy live stream modes. Credit: Jurgen Henn / 11foot8.com / yovo68. Preview/offline photo: Washuotaku, CC BY-SA 4.0, via Wikimedia Commons.",
   "type": "web",
   "file": "index.html",
   "preview": "preview.jpg",
@@ -18,11 +18,11 @@
         "order": 10,
         "text": "Playback mode",
         "type": "combo",
-        "value": "image",
+        "value": "video",
         "options": [
+          { "label": "Offline crash archive (YouTube)", "value": "video" },
           { "label": "Offline still image (safe)", "value": "image" },
-          { "label": "Live stream (YouTube)", "value": "live" },
-          { "label": "Offline archive video (YouTube)", "value": "video" }
+          { "label": "Legacy live stream (YouTube)", "value": "live" }
         ]
       },
       "videoid": {
@@ -35,8 +35,9 @@
         "order": 25,
         "text": "Offline archive source",
         "type": "combo",
-        "value": "random",
+        "value": "compilation",
         "options": [
+          { "label": "Crash compilation reel", "value": "compilation" },
           { "label": "Random verified 30s+ video", "value": "random" },
           { "label": "Custom video ID", "value": "custom" }
         ]
@@ -53,6 +54,20 @@
         "type": "slider",
         "value": 20,
         "min": 5,
+        "max": 90
+      },
+      "skipintros": {
+        "order": 28,
+        "text": "Skip video intros",
+        "type": "bool",
+        "value": true
+      },
+      "customstartseconds": {
+        "order": 29,
+        "text": "Custom video start seconds",
+        "type": "slider",
+        "value": 4,
+        "min": 0,
         "max": 90
       },
       "channelid": {

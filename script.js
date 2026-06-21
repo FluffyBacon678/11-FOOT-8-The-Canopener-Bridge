@@ -1,12 +1,12 @@
 const DEFAULTS = {
   channelId: "UCXX0RWOIBjt4o3ziHu-6a5A",
   videoId: "-CmDZ-oEtB0",
-  fallbackSource: "random",
+  fallbackSource: "compilation",
   rotateFallback: true,
   rotateMinutes: 20,
   overlayPreset: "compact",
   overlayPosition: "split",
-  mode: "image",
+  mode: "video",
   fit: "cover",
   controls: false,
   overlay: true,
@@ -21,42 +21,74 @@ const DEFAULTS = {
   clockZone: "America/New_York",
   clockFormat: "24",
   stripDensity: "compact",
+  skipIntros: true,
+  customStartSeconds: 4,
   muted: true
 };
 
 const FALLBACK_VIDEOS = [
-  { id: "raptWPQbkMg", title: "Preparing to raise the bridge", seconds: 536 },
-  { id: "YPt4ijPFzc8", title: "Raising the 11foot8 bridge", seconds: 522 },
-  { id: "998_yVr6mKI", title: "Moving truck aftermath", seconds: 231 },
-  { id: "vj8Bkn9kaLE", title: "Good, Bad, Ugly Crashes", seconds: 167 },
-  { id: "aBLH8qvaIFg", title: "Moving truck destroyed", seconds: 160 },
-  { id: "-CmDZ-oEtB0", title: "11foot8+8 2020 crash compilation", seconds: 159 },
-  { id: "PFI3dobpEXM", title: "Almost backs into ambulance", seconds: 116 },
-  { id: "LH83S869cbs", title: "Canopener traps truck", seconds: 113 },
-  { id: "whMCjUV4Ciw", title: "Spectacular bridge crash", seconds: 108 },
-  { id: "r9lf38iqjik", title: "Recent crashes and accidents", seconds: 103 },
-  { id: "iQfSvIgIs_M", title: "Warning system defeated", seconds: 97 },
-  { id: "_94aZG4rHS0", title: "Crash 100 at the bridge", seconds: 83 },
-  { id: "dXF7Hx4VHXU", title: "Another left turn crash", seconds: 79 },
-  { id: "D7fvQVPS0JM", title: "Two low bridge crashes", seconds: 73 },
-  { id: "yvlvfY6lOyg", title: "Two crashes in one morning", seconds: 68 },
-  { id: "PFl9X0g_WyE", title: "Reefer truck gets stuck", seconds: 57 },
-  { id: "mPUL2SQ77uQ", title: "Perfect peel at the bridge", seconds: 50 },
-  { id: "EAtvF7SYgw4", title: "Roof modification", seconds: 50 },
-  { id: "NsrHHwsHCck", title: "Bump or high-five?", seconds: 49 },
-  { id: "L4mQnp4H0fk", title: "Rental truck escape attempt", seconds: 48 },
-  { id: "zoZRPhMGCUQ", title: "Will this boxtruck get stuck?", seconds: 48 },
-  { id: "L7kucKmcoBQ", title: "Crash sprays debris", seconds: 46 },
-  { id: "eHSPgqdZ4DU", title: "Rental truck roof treatment", seconds: 42 },
-  { id: "R5FcJBKzUoA", title: "Concrete truck crash beam", seconds: 42 },
-  { id: "8qiGP72GFUc", title: "Clash of the giants", seconds: 36 },
-  { id: "Ne3WPt_H6rU", title: "Industrial vacuum truck crash", seconds: 35 },
-  { id: "q1fq3hxp_9k", title: "Camper gets stuck", seconds: 34 },
-  { id: "wQBwDnRvdIg", title: "11foot8 bridge fall compilation", seconds: 31 }
+  { id: "raptWPQbkMg", title: "Preparing to raise the bridge", seconds: 536, start: 0 },
+  { id: "YPt4ijPFzc8", title: "Raising the 11foot8 bridge", seconds: 522, start: 0 },
+  { id: "998_yVr6mKI", title: "Moving truck aftermath", seconds: 231, start: 6 },
+  { id: "vj8Bkn9kaLE", title: "Good, Bad, Ugly Crashes", seconds: 167, start: 5 },
+  { id: "aBLH8qvaIFg", title: "Moving truck destroyed", seconds: 160, start: 4 },
+  { id: "-CmDZ-oEtB0", title: "11foot8+8 2020 crash compilation", seconds: 159, start: 5 },
+  { id: "PFI3dobpEXM", title: "Almost backs into ambulance", seconds: 116, start: 4 },
+  { id: "LH83S869cbs", title: "Canopener traps truck", seconds: 113, start: 4 },
+  { id: "whMCjUV4Ciw", title: "Spectacular bridge crash", seconds: 108, start: 4 },
+  { id: "r9lf38iqjik", title: "Recent crashes and accidents", seconds: 103, start: 4 },
+  { id: "iQfSvIgIs_M", title: "Warning system defeated", seconds: 97, start: 5 },
+  { id: "_94aZG4rHS0", title: "Crash 100 at the bridge", seconds: 83, start: 4 },
+  { id: "dXF7Hx4VHXU", title: "Another left turn crash", seconds: 79, start: 4 },
+  { id: "D7fvQVPS0JM", title: "Two low bridge crashes", seconds: 73, start: 4 },
+  { id: "yvlvfY6lOyg", title: "Two crashes in one morning", seconds: 68, start: 4 },
+  { id: "PFl9X0g_WyE", title: "Reefer truck gets stuck", seconds: 57, start: 4 },
+  { id: "mPUL2SQ77uQ", title: "Perfect peel at the bridge", seconds: 50, start: 4 },
+  { id: "EAtvF7SYgw4", title: "Roof modification", seconds: 50, start: 4 },
+  { id: "NsrHHwsHCck", title: "Bump or high-five?", seconds: 49, start: 4 },
+  { id: "L4mQnp4H0fk", title: "Rental truck escape attempt", seconds: 48, start: 4 },
+  { id: "zoZRPhMGCUQ", title: "Will this boxtruck get stuck?", seconds: 48, start: 4 },
+  { id: "L7kucKmcoBQ", title: "Crash sprays debris", seconds: 46, start: 4 },
+  { id: "eHSPgqdZ4DU", title: "Rental truck roof treatment", seconds: 42, start: 4 },
+  { id: "R5FcJBKzUoA", title: "Concrete truck crash beam", seconds: 42, start: 4 },
+  { id: "8qiGP72GFUc", title: "Clash of the giants", seconds: 36, start: 3 },
+  { id: "Ne3WPt_H6rU", title: "Industrial vacuum truck crash", seconds: 35, start: 3 },
+  { id: "q1fq3hxp_9k", title: "Camper gets stuck", seconds: 34, start: 3 },
+  { id: "wQBwDnRvdIg", title: "11foot8 bridge fall compilation", seconds: 31, start: 3 }
 ];
 
 const MIN_FALLBACK_SECONDS = 30;
 const ELIGIBLE_FALLBACK_VIDEOS = FALLBACK_VIDEOS.filter((video) => video.seconds >= MIN_FALLBACK_SECONDS);
+const CRASH_COMPILATION_IDS = [
+  "vj8Bkn9kaLE",
+  "-CmDZ-oEtB0",
+  "aBLH8qvaIFg",
+  "998_yVr6mKI",
+  "whMCjUV4Ciw",
+  "r9lf38iqjik",
+  "iQfSvIgIs_M",
+  "_94aZG4rHS0",
+  "LH83S869cbs",
+  "D7fvQVPS0JM",
+  "dXF7Hx4VHXU",
+  "yvlvfY6lOyg",
+  "PFl9X0g_WyE",
+  "mPUL2SQ77uQ",
+  "EAtvF7SYgw4",
+  "NsrHHwsHCck",
+  "L4mQnp4H0fk",
+  "zoZRPhMGCUQ",
+  "L7kucKmcoBQ",
+  "eHSPgqdZ4DU",
+  "R5FcJBKzUoA",
+  "8qiGP72GFUc",
+  "Ne3WPt_H6rU",
+  "q1fq3hxp_9k",
+  "wQBwDnRvdIg"
+];
+const CRASH_COMPILATION_VIDEOS = CRASH_COMPILATION_IDS
+  .map((id) => FALLBACK_VIDEOS.find((video) => video.id === id))
+  .filter(Boolean);
 
 const PRESETS = {
   compact: {
@@ -139,6 +171,7 @@ function pickDifferentFallbackVideo(currentId) {
 const randomFallback = pickRandomFallbackVideo();
 const state = {
   ...DEFAULTS,
+  compilationIndex: 0,
   randomVideoId: randomFallback.id,
   randomVideoTitle: randomFallback.title
 };
@@ -150,14 +183,17 @@ const signalHeading = document.querySelector("#signalHeading");
 const signalLabel = document.querySelector("#signalLabel");
 const clock = document.querySelector("#clock");
 let lastRotationAt = Date.now();
+let activeVideoStartedAt = Date.now();
 let streamLoadTimer = 0;
 
 const ACCENTS = ["hazard", "signal", "steel", "red"];
 const CLOCK_ZONES = ["America/New_York", "local", "UTC"];
-const FALLBACK_SOURCES = ["random", "custom"];
+const FALLBACK_SOURCES = ["compilation", "random", "custom"];
 const OVERLAY_PRESETS = ["custom", ...Object.keys(PRESETS)];
 const OVERLAY_POSITIONS = ["split", "top-left", "top-right", "bottom-left", "bottom-right"];
 const EXTERNAL_STREAM_LOAD_DELAY_MS = 1200;
+const COMPILATION_CHECK_INTERVAL_MS = 5000;
+const MIN_COMPILATION_RUNTIME_SECONDS = 15;
 
 function sanitizeId(value, fallback) {
   const trimmed = String(value || "").trim();
@@ -198,6 +234,8 @@ function getQueryOverrides() {
   if (params.has("fallback")) overrides.fallbackSource = optionFromValue(params.get("fallback"), FALLBACK_SOURCES, DEFAULTS.fallbackSource);
   if (params.has("rotate")) overrides.rotateFallback = boolFromValue(params.get("rotate"), DEFAULTS.rotateFallback);
   if (params.has("rotateminutes")) overrides.rotateMinutes = numberInRange(params.get("rotateminutes"), 5, 90, DEFAULTS.rotateMinutes);
+  if (params.has("skipintros")) overrides.skipIntros = boolFromValue(params.get("skipintros"), DEFAULTS.skipIntros);
+  if (params.has("customstart")) overrides.customStartSeconds = numberInRange(params.get("customstart"), 0, 90, DEFAULTS.customStartSeconds);
   if (params.has("preset")) overrides.overlayPreset = optionFromValue(params.get("preset"), OVERLAY_PRESETS, DEFAULTS.overlayPreset);
   if (params.has("position")) overrides.overlayPosition = optionFromValue(params.get("position"), OVERLAY_POSITIONS, DEFAULTS.overlayPosition);
   if (params.has("channel")) overrides.channelId = params.get("channel");
@@ -235,6 +273,41 @@ function getFallbackVideoTitle(videoId) {
   return FALLBACK_VIDEOS.find((video) => video.id === normalized)?.title || "Custom offline recording";
 }
 
+function getFallbackVideo(videoId) {
+  const normalized = sanitizeVideoId(videoId, DEFAULTS.videoId);
+  return FALLBACK_VIDEOS.find((video) => video.id === normalized);
+}
+
+function getActiveFallbackVideo() {
+  if (state.fallbackSource === "compilation") {
+    return CRASH_COMPILATION_VIDEOS[state.compilationIndex % CRASH_COMPILATION_VIDEOS.length] || getFallbackVideo(DEFAULTS.videoId);
+  }
+
+  if (state.fallbackSource === "random") {
+    return getFallbackVideo(state.randomVideoId) || getFallbackVideo(DEFAULTS.videoId);
+  }
+
+  return getFallbackVideo(state.videoId) || {
+    id: sanitizeVideoId(state.videoId, DEFAULTS.videoId),
+    title: getFallbackVideoTitle(state.videoId),
+    seconds: 0,
+    start: state.customStartSeconds
+  };
+}
+
+function getVideoStartSeconds(video) {
+  if (!state.skipIntros) return 0;
+  if (state.fallbackSource === "custom" && !getFallbackVideo(video.id)) {
+    return Math.round(numberInRange(state.customStartSeconds, 0, 90, DEFAULTS.customStartSeconds));
+  }
+  return Math.round(numberInRange(video.start || 0, 0, Math.max(0, video.seconds - MIN_COMPILATION_RUNTIME_SECONDS), 0));
+}
+
+function getCompilationRuntimeSeconds(video) {
+  const startSeconds = getVideoStartSeconds(video);
+  return Math.max(MIN_COMPILATION_RUNTIME_SECONDS, (video.seconds || 0) - startSeconds);
+}
+
 function getVisualSettings() {
   if (state.overlayPreset === "custom") return state;
   return { ...state, ...PRESETS[state.overlayPreset] };
@@ -262,11 +335,23 @@ function buildEmbedUrl() {
   }
 
   if (state.mode === "video") {
-    const videoId = state.fallbackSource === "random"
-      ? sanitizeVideoId(state.randomVideoId, DEFAULTS.videoId)
-      : sanitizeVideoId(state.videoId, DEFAULTS.videoId);
-    params.set("loop", "1");
-    params.set("playlist", videoId);
+    const video = getActiveFallbackVideo();
+    const videoId = sanitizeVideoId(video.id, DEFAULTS.videoId);
+    const startSeconds = getVideoStartSeconds(video);
+
+    if (startSeconds > 0) {
+      params.set("start", String(startSeconds));
+    }
+
+    if (state.fallbackSource === "compilation") {
+      if (video.seconds) {
+        params.set("end", String(video.seconds));
+      }
+    } else {
+      params.set("loop", "1");
+      params.set("playlist", videoId);
+    }
+
     return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
   }
 
@@ -311,13 +396,20 @@ function applyVisualState() {
   }
 
   if (state.mode === "video") {
-    modeLabel.textContent = state.fallbackSource === "random"
-      ? "Offline archive"
-      : "Custom offline video";
-    signalHeading.textContent = "Archive";
-    signalLabel.textContent = state.fallbackSource === "random"
-      ? state.randomVideoTitle
-      : getFallbackVideoTitle(state.videoId);
+    const video = getActiveFallbackVideo();
+    if (state.fallbackSource === "compilation") {
+      modeLabel.textContent = "Crash compilation reel";
+      signalHeading.textContent = "Now playing";
+      signalLabel.textContent = `${state.compilationIndex + 1}/${CRASH_COMPILATION_VIDEOS.length} - ${video.title}`;
+    } else if (state.fallbackSource === "random") {
+      modeLabel.textContent = "Random yovo68 archive";
+      signalHeading.textContent = "Archive";
+      signalLabel.textContent = video.title;
+    } else {
+      modeLabel.textContent = "Custom offline video";
+      signalHeading.textContent = "Archive";
+      signalLabel.textContent = getFallbackVideoTitle(state.videoId);
+    }
   } else if (state.mode === "image") {
     modeLabel.textContent = "Offline still image";
     signalHeading.textContent = "Mode";
@@ -358,19 +450,6 @@ function refreshStream(force = false) {
   applyVisualState();
 }
 
-function refreshStreamImmediately(force = false) {
-  if (streamLoadTimer) {
-    window.clearTimeout(streamLoadTimer);
-    streamLoadTimer = 0;
-  }
-
-  const nextUrl = buildEmbedUrl();
-  if (force || stream.src !== nextUrl) {
-    stream.src = nextUrl;
-  }
-  applyVisualState();
-}
-
 function updateClock() {
   const now = new Date();
   const options = {
@@ -390,6 +469,9 @@ function updateClock() {
 function applyWallpaperProperties(properties) {
   const previousMode = state.mode;
   const previousFallbackSource = state.fallbackSource;
+  const previousVideoId = state.videoId;
+  const previousSkipIntros = state.skipIntros;
+  const previousCustomStartSeconds = state.customStartSeconds;
 
   if (properties.streammode) {
     state.mode = modeFromValue(properties.streammode.value);
@@ -407,6 +489,12 @@ function applyWallpaperProperties(properties) {
   if (properties.fallbackrotateminutes) {
     state.rotateMinutes = numberInRange(properties.fallbackrotateminutes.value, 5, 90, DEFAULTS.rotateMinutes);
     lastRotationAt = Date.now();
+  }
+  if (properties.skipintros) {
+    state.skipIntros = boolFromWallpaper(properties.skipintros.value);
+  }
+  if (properties.customstartseconds) {
+    state.customStartSeconds = numberInRange(properties.customstartseconds.value, 0, 90, DEFAULTS.customStartSeconds);
   }
   if (properties.overlaypreset) {
     state.overlayPreset = optionFromValue(properties.overlaypreset.value, OVERLAY_PRESETS, DEFAULTS.overlayPreset);
@@ -463,8 +551,15 @@ function applyWallpaperProperties(properties) {
     state.muted = boolFromWallpaper(properties.muted.value);
   }
 
-  if (state.mode !== previousMode || state.fallbackSource !== previousFallbackSource) {
+  if (
+    state.mode !== previousMode ||
+    state.fallbackSource !== previousFallbackSource ||
+    state.videoId !== previousVideoId ||
+    state.skipIntros !== previousSkipIntros ||
+    state.customStartSeconds !== previousCustomStartSeconds
+  ) {
     lastRotationAt = Date.now();
+    activeVideoStartedAt = Date.now();
   }
 
   refreshStream();
@@ -478,18 +573,32 @@ function rotateRandomFallback() {
   refreshStream(true);
 }
 
+function advanceCompilationVideo() {
+  state.compilationIndex = (state.compilationIndex + 1) % CRASH_COMPILATION_VIDEOS.length;
+  activeVideoStartedAt = Date.now();
+  refreshStream(true);
+}
+
 Object.assign(state, getQueryOverrides());
 state.mode = modeFromValue(state.mode);
-refreshStreamImmediately(true);
+refreshStream(true);
 updateClock();
 setInterval(updateClock, 1000 * 20);
 setInterval(() => {
+  if (state.mode === "video" && state.fallbackSource === "compilation") {
+    const video = getActiveFallbackVideo();
+    if (Date.now() - activeVideoStartedAt >= getCompilationRuntimeSeconds(video) * 1000) {
+      advanceCompilationVideo();
+    }
+    return;
+  }
+
   const canRotate = state.mode === "video" && state.fallbackSource === "random" && state.rotateFallback;
   if (!canRotate) return;
   if (Date.now() - lastRotationAt >= state.rotateMinutes * 60 * 1000) {
     rotateRandomFallback();
   }
-}, 1000 * 30);
+}, COMPILATION_CHECK_INTERVAL_MS);
 
 window.wallpaperPropertyListener = {
   applyUserProperties: applyWallpaperProperties
