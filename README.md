@@ -12,24 +12,45 @@ This folder is a Wallpaper Engine web wallpaper for the 11foot8+8 Canopener Brid
 
 The default playback mode is **Local crash video**. It uses a native HTML video player and never embeds YouTube, so Wallpaper Engine does not show the Chromium sad-face iframe crash.
 
-Add your own authorized local crash compilation in either of these ways:
+Add your own authorized local crash footage in either of these ways:
 
-- Use the Wallpaper Engine setting **Local crash video file** to pick a local video file.
-- Or put a video in this project, then set **Bundled video filenames** to a path such as `assets/crash-reel.webm`.
+- Best option: use one longer 30+ second crash compilation with **Local crash video file**.
+- Or put several clips in this project, then set **Bundled video filenames** to their paths.
 
 There is also a short note at `assets/README-crash-reel.txt` inside the project folder.
 
 If no local video can be loaded, the wallpaper automatically falls back to the bundled bridge photo at `assets/bridge-still.jpg`.
 
+## Crash Video Setup
+
+For the smoothest wallpaper, use one longer local video such as `crash-reel.webm`. That avoids frequent transitions and only needs the intro skipped once per loop.
+
+For several shorter clips, put them in `assets/crashes/`, then set **Bundled video filenames** like this:
+
+```text
+assets/crashes/clip-01.webm, assets/crashes/clip-02.webm, assets/crashes/clip-03.webm
+```
+
+The global **Skip intro seconds** setting is applied every time a clip starts or repeats. If one clip needs a different skip, add a per-file override:
+
+```text
+assets/crashes/clip-01.webm | skip=5, assets/crashes/clip-02.webm | skip=8
+```
+
+**Minimum seconds per clip** defaults to 30. If a short clip ends before that, it repeats from the skipped start point instead of jumping to the next clip immediately.
+
 ## Wallpaper Engine Settings
 
 - **Playback mode**: local crash video, or local still image.
 - **Video source**: try the picked file first, use only the picked file, or use only bundled project files.
+- **Playlist order**: shuffle clips, or play the bundled list in order.
 - **Local crash video file**: pick a video through Wallpaper Engine. The file picker supports Wallpaper Engine's native web video formats.
 - **Bundled video filenames**: optional comma-separated project paths to try, such as `assets/crash-reel.webm`. Leave blank when no video is bundled.
+- **Skip intro seconds**: skips the first few seconds every time a clip starts or repeats.
+- **Minimum seconds per clip**: keeps short clips from transitioning too quickly.
 - **Video fit**: crop to cover the screen, or show the full video/still-image frame.
 - **Enable video controls**: allows clicking the local video player when you want controls.
-- **Loop video**: loops the local crash reel.
+- **Loop crash reel / playlist**: loops the local crash reel or playlist.
 - **Mute video audio**: mutes the local video.
 - **Show all overlay**: master switch for the title, clock, and info strip.
 - **Overlay preset**: quick styles for compact, clean, info, minimal, full, cinema, or custom slider control.

@@ -2,6 +2,9 @@ const DEFAULTS = {
   bundledVideoFiles: "",
   localVideoFile: "",
   videoSource: "auto",
+  playlistOrder: "shuffle",
+  introSkipSeconds: 5,
+  minimumClipSeconds: 30,
   mode: "video",
   fit: "cover",
   controls: false,
@@ -102,11 +105,17 @@ const signalLabel = document.querySelector("#signalLabel");
 const clock = document.querySelector("#clock");
 
 let activeSourceIndex = 0;
+let activeSource = null;
 let pendingSources = [];
+let waitingForInitialSeek = false;
+let activeClipHasStarted = false;
+let clipCycleStartedAt = 0;
+let lastPlayedSourceUrl = "";
 
 const ACCENTS = ["hazard", "signal", "steel", "red"];
 const CLOCK_ZONES = ["America/New_York", "local", "UTC"];
 const VIDEO_SOURCES = ["auto", "bundled", "file"];
+const PLAYLIST_ORDERS = ["shuffle", "sequential"];
 const OVERLAY_PRESETS = ["custom", ...Object.keys(PRESETS)];
 const OVERLAY_POSITIONS = ["split", "top-left", "top-right", "bottom-left", "bottom-right"];
 
@@ -147,31 +156,63 @@ function normalizeFileUri(filePath) {
   return `file:///${raw.replace(/\\/g, "/")}`;
 }
 
-function getBundledVideoPaths() {
+function normalizeVideoUrl(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return "";
+  if (/^(file|https?):\/\//i.test(raw)) return raw;
+  if (/^[a-z]:[\\/]/i.test(raw) || raw.startsWith("\\\\")) return normalizeFileUri(raw);
+  return raw.replace(/\\/g, "/");
+}
+
+function makeVideoSource(url, startSeconds = null) {
+  return {
+    url,
+    startSeconds: Number.isFinite(startSeconds) ? startSeconds : null
+  };
+}
+
+function parseBundledVideoEntry(entry) {
+  const raw = String(entry || "").trim();
+  if (!raw) return null;
+
+  const match = raw.match(/^(.*?)(?:\s*\|\s*(?:skip=)?(\d+(?:\.\d+)?))?$/i);
+  const url = normalizeVideoUrl(match?.[1] || raw);
+  const startSeconds = match?.[2] === undefined ? null : numberInRange(match[2], 0, 300, DEFAULTS.introSkipSeconds);
+
+  return url ? makeVideoSource(url, startSeconds) : null;
+}
+
+function getBundledVideoSources() {
   return String(state.bundledVideoFiles || "")
     .split(",")
-    .map((path) => path.trim())
+    .map(parseBundledVideoEntry)
     .filter(Boolean);
 }
 
 function getVideoSources() {
   const customFile = normalizeFileUri(state.localVideoFile);
-  const bundledFiles = getBundledVideoPaths();
+  const pickedFile = customFile ? [makeVideoSource(customFile)] : [];
+  const bundledFiles = getBundledVideoSources();
 
   if (state.videoSource === "file") {
-    return customFile ? [customFile] : [];
+    return pickedFile;
   }
 
   if (state.videoSource === "bundled") {
     return bundledFiles;
   }
 
-  return customFile ? [customFile, ...bundledFiles] : bundledFiles;
+  return [...pickedFile, ...bundledFiles];
+}
+
+function getSourceUrl(source) {
+  return typeof source === "string" ? source : source?.url || "";
 }
 
 function getSourceLabel(source) {
-  if (!source) return "No local video selected";
-  const withoutQuery = source.split("?")[0];
+  const sourceUrl = getSourceUrl(source);
+  if (!sourceUrl) return "No local video selected";
+  const withoutQuery = sourceUrl.split("?")[0];
   const segments = withoutQuery.split(/[\\/]/);
   return decodeURIComponent(segments[segments.length - 1] || "Local crash reel");
 }
@@ -181,12 +222,13 @@ function canPrecheckBundledSource(source) {
 }
 
 async function sourceExists(source) {
-  if (/^file:\/\//i.test(source) && /^https?:$/i.test(window.location.protocol)) {
+  const sourceUrl = getSourceUrl(source);
+  if (/^file:\/\//i.test(sourceUrl) && /^https?:$/i.test(window.location.protocol)) {
     return false;
   }
-  if (!canPrecheckBundledSource(source)) return true;
+  if (!canPrecheckBundledSource(sourceUrl)) return true;
   try {
-    const response = await fetch(source, { method: "HEAD", cache: "no-store" });
+    const response = await fetch(sourceUrl, { method: "HEAD", cache: "no-store" });
     return response.ok;
   } catch {
     return true;
@@ -203,13 +245,51 @@ async function filterAvailableSources(sources) {
   return availableSources;
 }
 
+function shuffleSources(sources) {
+  const shuffled = [...sources];
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+  }
+
+  if (shuffled.length > 1 && getSourceUrl(shuffled[0]) === lastPlayedSourceUrl) {
+    [shuffled[0], shuffled[1]] = [shuffled[1], shuffled[0]];
+  }
+
+  return shuffled;
+}
+
+function orderPlaylist(sources) {
+  if (state.playlistOrder === "shuffle") {
+    return shuffleSources(sources);
+  }
+  return sources;
+}
+
+function getSourceStartSeconds(source) {
+  return Number.isFinite(source?.startSeconds) ? source.startSeconds : state.introSkipSeconds;
+}
+
+function getSafeStartTime(source) {
+  const configuredStart = numberInRange(getSourceStartSeconds(source), 0, 300, DEFAULTS.introSkipSeconds);
+  if (!Number.isFinite(video.duration) || video.duration <= 0) return configuredStart;
+
+  const minimumVisibleSeconds = Math.min(3, video.duration);
+  const latestStart = Math.max(0, video.duration - minimumVisibleSeconds);
+  return Math.min(configuredStart, latestStart);
+}
+
 function getQueryOverrides() {
   const params = new URLSearchParams(window.location.search);
   const overrides = {};
   if (params.has("mode")) overrides.mode = params.get("mode");
   if (params.has("videosource")) overrides.videoSource = optionFromValue(params.get("videosource"), VIDEO_SOURCES, DEFAULTS.videoSource);
+  if (params.has("order")) overrides.playlistOrder = optionFromValue(params.get("order"), PLAYLIST_ORDERS, DEFAULTS.playlistOrder);
   if (params.has("videofile")) overrides.localVideoFile = params.get("videofile");
   if (params.has("bundledvideos")) overrides.bundledVideoFiles = params.get("bundledvideos");
+  if (params.has("skip")) overrides.introSkipSeconds = numberInRange(params.get("skip"), 0, 300, DEFAULTS.introSkipSeconds);
+  if (params.has("introskip")) overrides.introSkipSeconds = numberInRange(params.get("introskip"), 0, 300, DEFAULTS.introSkipSeconds);
+  if (params.has("minclip")) overrides.minimumClipSeconds = numberInRange(params.get("minclip"), 0, 600, DEFAULTS.minimumClipSeconds);
   if (params.has("fit")) overrides.fit = params.get("fit");
   if (params.has("controls")) overrides.controls = boolFromValue(params.get("controls"), DEFAULTS.controls);
   if (params.has("muted")) overrides.muted = boolFromValue(params.get("muted"), DEFAULTS.muted);
@@ -265,7 +345,7 @@ function applyVisualState() {
   );
 
   video.muted = state.muted;
-  video.loop = state.loopVideo;
+  video.loop = false;
   video.controls = state.controls;
 
   frame.classList.toggle("fit-contain", state.fit === "contain");
@@ -298,10 +378,22 @@ function showVideoSource(source) {
   document.body.classList.add("has-video");
   modeLabel.textContent = "Local crash reel";
   signalHeading.textContent = "Now playing";
+  const playlistPosition = pendingSources.length > 1 ? `${activeSourceIndex + 1}/${pendingSources.length} - ` : "";
+  signalLabel.textContent = `${playlistPosition}${getSourceLabel(source)}`;
+}
+
+function showVideoLoading(source) {
+  document.body.classList.remove("has-video");
+  document.body.classList.add("is-image");
+  modeLabel.textContent = "Local crash reel";
+  signalHeading.textContent = "Loading";
   signalLabel.textContent = getSourceLabel(source);
 }
 
 function showVideoFallback(reason = "No local video loaded") {
+  activeSource = null;
+  waitingForInitialSeek = false;
+  activeClipHasStarted = false;
   video.pause();
   video.removeAttribute("src");
   video.load();
@@ -312,13 +404,49 @@ function showVideoFallback(reason = "No local video loaded") {
   signalLabel.textContent = reason;
 }
 
-async function loadVideoSource(index = 0) {
+async function rebuildPlaylist() {
+  const availableSources = await filterAvailableSources(getVideoSources());
+  pendingSources = orderPlaylist(availableSources);
+}
+
+function seekToClipStart() {
+  if (!activeSource) return false;
+  const startTime = getSafeStartTime(activeSource);
+  if (startTime <= 0.05) return false;
+
+  waitingForInitialSeek = true;
+  try {
+    video.currentTime = startTime;
+    return true;
+  } catch {
+    waitingForInitialSeek = false;
+    return false;
+  }
+}
+
+function playActiveVideo() {
+  if (!activeSource || waitingForInitialSeek || video.error) return;
+  if (activeClipHasStarted) return;
+
+  activeClipHasStarted = true;
+  clipCycleStartedAt = performance.now();
+  showVideoSource(activeSource);
+
+  const playPromise = video.play();
+  if (playPromise && typeof playPromise.catch === "function") {
+    playPromise.catch(() => {});
+  }
+}
+
+async function loadVideoSource(index = 0, rebuild = true) {
   if (state.mode === "image") {
     showVideoFallback("Wikimedia bridge photo");
     return;
   }
 
-  pendingSources = await filterAvailableSources(getVideoSources());
+  if (rebuild) {
+    await rebuildPlaylist();
+  }
   activeSourceIndex = index;
 
   if (!pendingSources.length) {
@@ -326,22 +454,61 @@ async function loadVideoSource(index = 0) {
     return;
   }
 
-  const source = pendingSources[activeSourceIndex];
-  video.src = source;
+  activeSource = pendingSources[activeSourceIndex];
+  waitingForInitialSeek = false;
+  activeClipHasStarted = false;
+  showVideoLoading(activeSource);
+  video.src = getSourceUrl(activeSource);
   video.load();
-  showVideoSource(source);
-  const playPromise = video.play();
-  if (playPromise && typeof playPromise.catch === "function") {
-    playPromise.catch(() => {});
-  }
 }
 
 function tryNextVideoSource() {
   if (activeSourceIndex + 1 < pendingSources.length) {
-    void loadVideoSource(activeSourceIndex + 1);
+    void loadVideoSource(activeSourceIndex + 1, false);
     return;
   }
   showVideoFallback("Pick a local video file or add a bundled crash reel");
+}
+
+function replayCurrentClip() {
+  if (!activeSource) return;
+  waitingForInitialSeek = false;
+  activeClipHasStarted = false;
+  const startTime = getSafeStartTime(activeSource);
+  try {
+    video.currentTime = startTime;
+  } catch {
+    video.currentTime = 0;
+  }
+  playActiveVideo();
+}
+
+function playNextClip() {
+  if (activeSource) {
+    lastPlayedSourceUrl = getSourceUrl(activeSource);
+  }
+
+  if (activeSourceIndex + 1 < pendingSources.length) {
+    void loadVideoSource(activeSourceIndex + 1, false);
+    return;
+  }
+
+  if (state.loopVideo) {
+    void loadVideoSource(0, true);
+    return;
+  }
+
+  showVideoFallback("Crash reel finished");
+}
+
+function handleVideoEnded() {
+  const watchedSeconds = clipCycleStartedAt ? (performance.now() - clipCycleStartedAt) / 1000 : 0;
+  if (state.minimumClipSeconds > 0 && watchedSeconds < state.minimumClipSeconds) {
+    replayCurrentClip();
+    return;
+  }
+
+  playNextClip();
 }
 
 function refreshPlayback() {
@@ -376,6 +543,10 @@ function applyWallpaperProperties(properties) {
     state.videoSource = optionFromValue(properties.videosource.value, VIDEO_SOURCES, DEFAULTS.videoSource);
     reloadVideo = true;
   }
+  if (properties.playlistorder) {
+    state.playlistOrder = optionFromValue(properties.playlistorder.value, PLAYLIST_ORDERS, DEFAULTS.playlistOrder);
+    reloadVideo = true;
+  }
   if (properties.localvideofile) {
     state.localVideoFile = properties.localvideofile.value || "";
     reloadVideo = true;
@@ -383,6 +554,13 @@ function applyWallpaperProperties(properties) {
   if (properties.bundledvideofiles) {
     state.bundledVideoFiles = properties.bundledvideofiles.value || DEFAULTS.bundledVideoFiles;
     reloadVideo = true;
+  }
+  if (properties.introskipseconds) {
+    state.introSkipSeconds = numberInRange(properties.introskipseconds.value, 0, 300, DEFAULTS.introSkipSeconds);
+    reloadVideo = true;
+  }
+  if (properties.minimumclipseconds) {
+    state.minimumClipSeconds = numberInRange(properties.minimumclipseconds.value, 0, 600, DEFAULTS.minimumClipSeconds);
   }
   if (properties.videofit) {
     state.fit = properties.videofit.value === "contain" ? "contain" : "cover";
@@ -445,13 +623,23 @@ function applyWallpaperProperties(properties) {
   }
 }
 
-video.addEventListener("loadeddata", () => {
-  showVideoSource(video.currentSrc || video.src);
+video.addEventListener("loadedmetadata", () => {
+  if (!seekToClipStart()) {
+    playActiveVideo();
+  }
 });
+video.addEventListener("seeked", () => {
+  if (!waitingForInitialSeek) return;
+  waitingForInitialSeek = false;
+  playActiveVideo();
+});
+video.addEventListener("canplay", playActiveVideo);
+video.addEventListener("ended", handleVideoEnded);
 video.addEventListener("error", tryNextVideoSource);
 
 Object.assign(state, getQueryOverrides());
 state.mode = modeFromValue(state.mode);
+state.playlistOrder = optionFromValue(state.playlistOrder, PLAYLIST_ORDERS, DEFAULTS.playlistOrder);
 refreshPlayback();
 updateClock();
 setInterval(updateClock, 1000 * 20);

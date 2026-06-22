@@ -1,6 +1,6 @@
 {
   "title": "11 Foot 8 - Canopener Bridge Crash Reel",
-  "description": "A Wallpaper Engine web wallpaper for the 11foot8+8 Canopener Bridge in Durham, NC. Plays a local crash-reel video file when provided, with a bundled bridge still image as the safe fallback. Credit: Jurgen Henn / 11foot8.com / yovo68. Preview/local still photo: Washuotaku, CC BY-SA 4.0, via Wikimedia Commons.",
+  "description": "A Wallpaper Engine web wallpaper for the 11foot8+8 Canopener Bridge in Durham, NC. Plays a local crash-reel video or crash-clip playlist when provided, with intro skipping and a bundled bridge still image as the safe fallback. Credit: Jurgen Henn / 11foot8.com / yovo68. Preview/local still photo: Washuotaku, CC BY-SA 4.0, via Wikimedia Commons.",
   "type": "web",
   "file": "index.html",
   "preview": "preview.jpg",
@@ -11,7 +11,7 @@
     "Technology",
     "Relaxing"
   ],
-  "version": 1,
+  "version": 2,
   "general": {
     "properties": {
       "streammode": {
@@ -35,6 +35,16 @@
           { "label": "Bundled project files only", "value": "bundled" }
         ]
       },
+      "playlistorder": {
+        "order": 25,
+        "text": "Playlist order",
+        "type": "combo",
+        "value": "shuffle",
+        "options": [
+          { "label": "Shuffle clips", "value": "shuffle" },
+          { "label": "Sequential", "value": "sequential" }
+        ]
+      },
       "localvideofile": {
         "order": 30,
         "text": "Local crash video file",
@@ -46,6 +56,22 @@
         "text": "Bundled video filenames (optional)",
         "type": "textinput",
         "value": ""
+      },
+      "introskipseconds": {
+        "order": 36,
+        "text": "Skip intro seconds",
+        "type": "slider",
+        "value": 5,
+        "min": 0,
+        "max": 30
+      },
+      "minimumclipseconds": {
+        "order": 37,
+        "text": "Minimum seconds per clip",
+        "type": "slider",
+        "value": 30,
+        "min": 0,
+        "max": 120
       },
       "videofit": {
         "order": 40,
@@ -65,7 +91,7 @@
       },
       "loopvideo": {
         "order": 55,
-        "text": "Loop video",
+        "text": "Loop crash reel / playlist",
         "type": "bool",
         "value": true
       },
