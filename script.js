@@ -1,5 +1,5 @@
 const DEFAULTS = {
-  bundledVideoFiles: "assets/crash-reel.webm, assets/crash-reel.mp4, assets/crash-reel.ogv",
+  bundledVideoFiles: "",
   localVideoFile: "",
   videoSource: "auto",
   mode: "video",
@@ -181,6 +181,9 @@ function canPrecheckBundledSource(source) {
 }
 
 async function sourceExists(source) {
+  if (/^file:\/\//i.test(source) && /^https?:$/i.test(window.location.protocol)) {
+    return false;
+  }
   if (!canPrecheckBundledSource(source)) return true;
   try {
     const response = await fetch(source, { method: "HEAD", cache: "no-store" });
@@ -230,7 +233,15 @@ function getQueryOverrides() {
 
 function getVisualSettings() {
   if (state.overlayPreset === "custom") return state;
-  return { ...state, ...PRESETS[state.overlayPreset] };
+  const preset = PRESETS[state.overlayPreset];
+  return {
+    ...state,
+    ...preset,
+    overlay: state.overlay && preset.overlay,
+    showTitle: state.showTitle && preset.showTitle,
+    showClock: state.showClock && preset.showClock,
+    showStrip: state.showStrip && preset.showStrip
+  };
 }
 
 function applyVisualState() {
@@ -291,6 +302,7 @@ function showVideoSource(source) {
 }
 
 function showVideoFallback(reason = "No local video loaded") {
+  video.pause();
   video.removeAttribute("src");
   video.load();
   document.body.classList.remove("has-video");
@@ -329,7 +341,7 @@ function tryNextVideoSource() {
     void loadVideoSource(activeSourceIndex + 1);
     return;
   }
-  showVideoFallback("Add assets/crash-reel.webm or pick a video file");
+  showVideoFallback("Pick a local video file or add a bundled crash reel");
 }
 
 function refreshPlayback() {
@@ -381,6 +393,9 @@ function applyWallpaperProperties(properties) {
   if (properties.loopvideo) {
     state.loopVideo = boolFromWallpaper(properties.loopvideo.value);
   }
+  if (properties.muted) {
+    state.muted = boolFromWallpaper(properties.muted.value);
+  }
   if (properties.showoverlay) {
     state.overlay = boolFromWallpaper(properties.showoverlay.value);
   }
@@ -422,9 +437,6 @@ function applyWallpaperProperties(properties) {
   }
   if (properties.stripdensity) {
     state.stripDensity = optionFromValue(properties.stripdensity.value, ["normal", "compact"], DEFAULTS.stripDensity);
-  }
-  if (properties.muted) {
-    state.muted = boolFromWallpaper(properties.muted.value);
   }
 
   applyVisualState();

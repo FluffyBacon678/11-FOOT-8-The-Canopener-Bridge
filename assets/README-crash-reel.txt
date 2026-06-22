@@ -1,4 +1,7 @@
-Put your authorized local crash reel video here as one of:
+Put your authorized local crash reel video here, then set the Wallpaper
+Engine setting "Bundled video filenames (optional)" to its project path.
+
+Recommended filenames:
 
 - crash-reel.webm
 - crash-reel.mp4
@@ -7,3 +10,6 @@ Put your authorized local crash reel video here as one of:
 Wallpaper Engine's web file picker officially supports WebM/Ogg video.
 MP4 may work as a bundled browser video on many Windows systems, but WebM
 is the safest format for sharing.
+
+The bundled-video list is blank by default so the wallpaper does not make
+missing-file requests when no crash reel has been added yet.

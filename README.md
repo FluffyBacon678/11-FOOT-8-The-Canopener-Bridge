@@ -14,8 +14,8 @@ The default playback mode is **Local crash video**. It uses a native HTML video 
 
 Add your own authorized local crash compilation in either of these ways:
 
-- Put a video in this project as `assets/crash-reel.webm`, `assets/crash-reel.mp4`, or `assets/crash-reel.ogv`.
-- Or use the Wallpaper Engine setting **Local crash video file** to pick a local video file.
+- Use the Wallpaper Engine setting **Local crash video file** to pick a local video file.
+- Or put a video in this project, then set **Bundled video filenames** to a path such as `assets/crash-reel.webm`.
 
 There is also a short note at `assets/README-crash-reel.txt` inside the project folder.
 
@@ -26,7 +26,7 @@ If no local video can be loaded, the wallpaper automatically falls back to the b
 - **Playback mode**: local crash video, or local still image.
 - **Video source**: try the picked file first, use only the picked file, or use only bundled project files.
 - **Local crash video file**: pick a video through Wallpaper Engine. The file picker supports Wallpaper Engine's native web video formats.
-- **Bundled video filenames**: comma-separated project paths to try, defaulting to `assets/crash-reel.webm`, `assets/crash-reel.mp4`, and `assets/crash-reel.ogv`.
+- **Bundled video filenames**: optional comma-separated project paths to try, such as `assets/crash-reel.webm`. Leave blank when no video is bundled.
 - **Video fit**: crop to cover the screen, or show the full video/still-image frame.
 - **Enable video controls**: allows clicking the local video player when you want controls.
 - **Loop video**: loops the local crash reel.

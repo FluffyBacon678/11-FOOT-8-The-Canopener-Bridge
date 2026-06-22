@@ -43,9 +43,9 @@
       },
       "bundledvideofiles": {
         "order": 35,
-        "text": "Bundled video filenames",
+        "text": "Bundled video filenames (optional)",
         "type": "textinput",
-        "value": "assets/crash-reel.webm, assets/crash-reel.mp4, assets/crash-reel.ogv"
+        "value": ""
       },
       "videofit": {
         "order": 40,
