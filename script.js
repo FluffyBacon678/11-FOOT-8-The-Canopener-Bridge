@@ -1,10 +1,7 @@
 const DEFAULTS = {
-  videoId: "-CmDZ-oEtB0",
-  fallbackSource: "compilation",
-  rotateFallback: true,
-  rotateMinutes: 20,
-  overlayPreset: "compact",
-  overlayPosition: "split",
+  bundledVideoFiles: "assets/crash-reel.webm, assets/crash-reel.mp4, assets/crash-reel.ogv",
+  localVideoFile: "",
+  videoSource: "auto",
   mode: "video",
   fit: "cover",
   controls: false,
@@ -12,6 +9,8 @@ const DEFAULTS = {
   showTitle: true,
   showClock: true,
   showStrip: true,
+  overlayPreset: "compact",
+  overlayPosition: "split",
   overlayOpacity: 100,
   panelOpacity: 78,
   uiScale: 82,
@@ -20,74 +19,9 @@ const DEFAULTS = {
   clockZone: "America/New_York",
   clockFormat: "24",
   stripDensity: "compact",
-  skipIntros: true,
-  customStartSeconds: 4,
-  muted: true
+  muted: true,
+  loopVideo: true
 };
-
-const FALLBACK_VIDEOS = [
-  { id: "raptWPQbkMg", title: "Preparing to raise the bridge", seconds: 536, start: 0 },
-  { id: "YPt4ijPFzc8", title: "Raising the 11foot8 bridge", seconds: 522, start: 0 },
-  { id: "998_yVr6mKI", title: "Moving truck aftermath", seconds: 231, start: 6 },
-  { id: "vj8Bkn9kaLE", title: "Good, Bad, Ugly Crashes", seconds: 167, start: 5 },
-  { id: "aBLH8qvaIFg", title: "Moving truck destroyed", seconds: 160, start: 4 },
-  { id: "-CmDZ-oEtB0", title: "11foot8+8 2020 crash compilation", seconds: 159, start: 5 },
-  { id: "PFI3dobpEXM", title: "Almost backs into ambulance", seconds: 116, start: 4 },
-  { id: "LH83S869cbs", title: "Canopener traps truck", seconds: 113, start: 4 },
-  { id: "whMCjUV4Ciw", title: "Spectacular bridge crash", seconds: 108, start: 4 },
-  { id: "r9lf38iqjik", title: "Recent crashes and accidents", seconds: 103, start: 4 },
-  { id: "iQfSvIgIs_M", title: "Warning system defeated", seconds: 97, start: 5 },
-  { id: "_94aZG4rHS0", title: "Crash 100 at the bridge", seconds: 83, start: 4 },
-  { id: "dXF7Hx4VHXU", title: "Another left turn crash", seconds: 79, start: 4 },
-  { id: "D7fvQVPS0JM", title: "Two low bridge crashes", seconds: 73, start: 4 },
-  { id: "yvlvfY6lOyg", title: "Two crashes in one morning", seconds: 68, start: 4 },
-  { id: "PFl9X0g_WyE", title: "Reefer truck gets stuck", seconds: 57, start: 4 },
-  { id: "mPUL2SQ77uQ", title: "Perfect peel at the bridge", seconds: 50, start: 4 },
-  { id: "EAtvF7SYgw4", title: "Roof modification", seconds: 50, start: 4 },
-  { id: "NsrHHwsHCck", title: "Bump or high-five?", seconds: 49, start: 4 },
-  { id: "L4mQnp4H0fk", title: "Rental truck escape attempt", seconds: 48, start: 4 },
-  { id: "zoZRPhMGCUQ", title: "Will this boxtruck get stuck?", seconds: 48, start: 4 },
-  { id: "L7kucKmcoBQ", title: "Crash sprays debris", seconds: 46, start: 4 },
-  { id: "eHSPgqdZ4DU", title: "Rental truck roof treatment", seconds: 42, start: 4 },
-  { id: "R5FcJBKzUoA", title: "Concrete truck crash beam", seconds: 42, start: 4 },
-  { id: "8qiGP72GFUc", title: "Clash of the giants", seconds: 36, start: 3 },
-  { id: "Ne3WPt_H6rU", title: "Industrial vacuum truck crash", seconds: 35, start: 3 },
-  { id: "q1fq3hxp_9k", title: "Camper gets stuck", seconds: 34, start: 3 },
-  { id: "wQBwDnRvdIg", title: "11foot8 bridge fall compilation", seconds: 31, start: 3 }
-];
-
-const MIN_FALLBACK_SECONDS = 30;
-const ELIGIBLE_FALLBACK_VIDEOS = FALLBACK_VIDEOS.filter((video) => video.seconds >= MIN_FALLBACK_SECONDS);
-const CRASH_COMPILATION_IDS = [
-  "vj8Bkn9kaLE",
-  "-CmDZ-oEtB0",
-  "aBLH8qvaIFg",
-  "998_yVr6mKI",
-  "whMCjUV4Ciw",
-  "r9lf38iqjik",
-  "iQfSvIgIs_M",
-  "_94aZG4rHS0",
-  "LH83S869cbs",
-  "D7fvQVPS0JM",
-  "dXF7Hx4VHXU",
-  "yvlvfY6lOyg",
-  "PFl9X0g_WyE",
-  "mPUL2SQ77uQ",
-  "EAtvF7SYgw4",
-  "NsrHHwsHCck",
-  "L4mQnp4H0fk",
-  "zoZRPhMGCUQ",
-  "L7kucKmcoBQ",
-  "eHSPgqdZ4DU",
-  "R5FcJBKzUoA",
-  "8qiGP72GFUc",
-  "Ne3WPt_H6rU",
-  "q1fq3hxp_9k",
-  "wQBwDnRvdIg"
-];
-const CRASH_COMPILATION_VIDEOS = CRASH_COMPILATION_IDS
-  .map((id) => FALLBACK_VIDEOS.find((video) => video.id === id))
-  .filter(Boolean);
 
 const PRESETS = {
   compact: {
@@ -158,52 +92,23 @@ const PRESETS = {
   }
 };
 
-function pickRandomFallbackVideo() {
-  return ELIGIBLE_FALLBACK_VIDEOS[Math.floor(Math.random() * ELIGIBLE_FALLBACK_VIDEOS.length)];
-}
-
-function pickDifferentFallbackVideo(currentId) {
-  const choices = ELIGIBLE_FALLBACK_VIDEOS.filter((video) => video.id !== currentId);
-  return choices[Math.floor(Math.random() * choices.length)] || pickRandomFallbackVideo();
-}
-
-const randomFallback = pickRandomFallbackVideo();
-const state = {
-  ...DEFAULTS,
-  compilationIndex: 0,
-  randomVideoId: randomFallback.id,
-  randomVideoTitle: randomFallback.title
-};
-const stream = document.querySelector("#bridgeStream");
+const state = { ...DEFAULTS };
+const video = document.querySelector("#bridgeVideo");
 const frame = document.querySelector("#videoFrame");
 const overlay = document.querySelector("#overlay");
 const modeLabel = document.querySelector("#modeLabel");
 const signalHeading = document.querySelector("#signalHeading");
 const signalLabel = document.querySelector("#signalLabel");
 const clock = document.querySelector("#clock");
-let lastRotationAt = Date.now();
-let activeVideoStartedAt = Date.now();
-let streamLoadTimer = 0;
+
+let activeSourceIndex = 0;
+let pendingSources = [];
 
 const ACCENTS = ["hazard", "signal", "steel", "red"];
 const CLOCK_ZONES = ["America/New_York", "local", "UTC"];
-const FALLBACK_SOURCES = ["compilation", "random", "custom"];
+const VIDEO_SOURCES = ["auto", "bundled", "file"];
 const OVERLAY_PRESETS = ["custom", ...Object.keys(PRESETS)];
 const OVERLAY_POSITIONS = ["split", "top-left", "top-right", "bottom-left", "bottom-right"];
-const EXTERNAL_STREAM_LOAD_DELAY_MS = 1200;
-const COMPILATION_CHECK_INTERVAL_MS = 5000;
-const MIN_COMPILATION_RUNTIME_SECONDS = 15;
-
-function sanitizeId(value, fallback) {
-  const trimmed = String(value || "").trim();
-  return /^[\w-]{6,}$/.test(trimmed) ? trimmed : fallback;
-}
-
-function sanitizeVideoId(value, fallback) {
-  const raw = String(value || "").trim();
-  const match = raw.match(/(?:v=|youtu\.be\/|embed\/)([\w-]{6,})/);
-  return sanitizeId(match ? match[1] : raw, fallback);
-}
 
 function boolFromValue(value, fallback = false) {
   if (value === true || value === 1) return true;
@@ -212,6 +117,10 @@ function boolFromValue(value, fallback = false) {
   if (["1", "true", "yes", "on"].includes(normalized)) return true;
   if (["0", "false", "no", "off"].includes(normalized)) return false;
   return fallback;
+}
+
+function boolFromWallpaper(value) {
+  return boolFromValue(value, false);
 }
 
 function numberInRange(value, min, max, fallback) {
@@ -225,25 +134,89 @@ function optionFromValue(value, allowed, fallback) {
   return allowed.includes(normalized) ? normalized : fallback;
 }
 
+function modeFromValue(value) {
+  const normalized = String(value || "").trim().toLowerCase();
+  if (["image", "still", "photo", "local-image"].includes(normalized)) return "image";
+  return "video";
+}
+
+function normalizeFileUri(filePath) {
+  const raw = String(filePath || "").trim();
+  if (!raw) return "";
+  if (/^(file|https?):\/\//i.test(raw)) return raw;
+  return `file:///${raw.replace(/\\/g, "/")}`;
+}
+
+function getBundledVideoPaths() {
+  return String(state.bundledVideoFiles || "")
+    .split(",")
+    .map((path) => path.trim())
+    .filter(Boolean);
+}
+
+function getVideoSources() {
+  const customFile = normalizeFileUri(state.localVideoFile);
+  const bundledFiles = getBundledVideoPaths();
+
+  if (state.videoSource === "file") {
+    return customFile ? [customFile] : [];
+  }
+
+  if (state.videoSource === "bundled") {
+    return bundledFiles;
+  }
+
+  return customFile ? [customFile, ...bundledFiles] : bundledFiles;
+}
+
+function getSourceLabel(source) {
+  if (!source) return "No local video selected";
+  const withoutQuery = source.split("?")[0];
+  const segments = withoutQuery.split(/[\\/]/);
+  return decodeURIComponent(segments[segments.length - 1] || "Local crash reel");
+}
+
+function canPrecheckBundledSource(source) {
+  return /^(https?:)?\/\//i.test(source) === false && /^file:\/\//i.test(source) === false && /^https?:$/i.test(window.location.protocol);
+}
+
+async function sourceExists(source) {
+  if (!canPrecheckBundledSource(source)) return true;
+  try {
+    const response = await fetch(source, { method: "HEAD", cache: "no-store" });
+    return response.ok;
+  } catch {
+    return true;
+  }
+}
+
+async function filterAvailableSources(sources) {
+  const availableSources = [];
+  for (const source of sources) {
+    if (await sourceExists(source)) {
+      availableSources.push(source);
+    }
+  }
+  return availableSources;
+}
+
 function getQueryOverrides() {
   const params = new URLSearchParams(window.location.search);
   const overrides = {};
   if (params.has("mode")) overrides.mode = params.get("mode");
-  if (params.has("video")) overrides.videoId = sanitizeVideoId(params.get("video"), DEFAULTS.videoId);
-  if (params.has("fallback")) overrides.fallbackSource = optionFromValue(params.get("fallback"), FALLBACK_SOURCES, DEFAULTS.fallbackSource);
-  if (params.has("rotate")) overrides.rotateFallback = boolFromValue(params.get("rotate"), DEFAULTS.rotateFallback);
-  if (params.has("rotateminutes")) overrides.rotateMinutes = numberInRange(params.get("rotateminutes"), 5, 90, DEFAULTS.rotateMinutes);
-  if (params.has("skipintros")) overrides.skipIntros = boolFromValue(params.get("skipintros"), DEFAULTS.skipIntros);
-  if (params.has("customstart")) overrides.customStartSeconds = numberInRange(params.get("customstart"), 0, 90, DEFAULTS.customStartSeconds);
-  if (params.has("preset")) overrides.overlayPreset = optionFromValue(params.get("preset"), OVERLAY_PRESETS, DEFAULTS.overlayPreset);
-  if (params.has("position")) overrides.overlayPosition = optionFromValue(params.get("position"), OVERLAY_POSITIONS, DEFAULTS.overlayPosition);
+  if (params.has("videosource")) overrides.videoSource = optionFromValue(params.get("videosource"), VIDEO_SOURCES, DEFAULTS.videoSource);
+  if (params.has("videofile")) overrides.localVideoFile = params.get("videofile");
+  if (params.has("bundledvideos")) overrides.bundledVideoFiles = params.get("bundledvideos");
   if (params.has("fit")) overrides.fit = params.get("fit");
   if (params.has("controls")) overrides.controls = boolFromValue(params.get("controls"), DEFAULTS.controls);
   if (params.has("muted")) overrides.muted = boolFromValue(params.get("muted"), DEFAULTS.muted);
+  if (params.has("loop")) overrides.loopVideo = boolFromValue(params.get("loop"), DEFAULTS.loopVideo);
   if (params.has("overlay")) overrides.overlay = boolFromValue(params.get("overlay"), DEFAULTS.overlay);
   if (params.has("title")) overrides.showTitle = boolFromValue(params.get("title"), DEFAULTS.showTitle);
   if (params.has("clock")) overrides.showClock = boolFromValue(params.get("clock"), DEFAULTS.showClock);
   if (params.has("strip")) overrides.showStrip = boolFromValue(params.get("strip"), DEFAULTS.showStrip);
+  if (params.has("preset")) overrides.overlayPreset = optionFromValue(params.get("preset"), OVERLAY_PRESETS, DEFAULTS.overlayPreset);
+  if (params.has("position")) overrides.overlayPosition = optionFromValue(params.get("position"), OVERLAY_POSITIONS, DEFAULTS.overlayPosition);
   if (params.has("opacity")) overrides.overlayOpacity = numberInRange(params.get("opacity"), 0, 100, DEFAULTS.overlayOpacity);
   if (params.has("panel")) overrides.panelOpacity = numberInRange(params.get("panel"), 35, 100, DEFAULTS.panelOpacity);
   if (params.has("scale")) overrides.uiScale = numberInRange(params.get("scale"), 70, 130, DEFAULTS.uiScale);
@@ -255,104 +228,9 @@ function getQueryOverrides() {
   return overrides;
 }
 
-function boolFromWallpaper(value) {
-  return boolFromValue(value, false);
-}
-
-function modeFromValue(value) {
-  const normalized = String(value || "").trim().toLowerCase();
-  if (["image", "still", "photo", "local-image"].includes(normalized)) return "image";
-  return "video";
-}
-
-function getFallbackVideoTitle(videoId) {
-  const normalized = sanitizeVideoId(videoId, "");
-  return FALLBACK_VIDEOS.find((video) => video.id === normalized)?.title || "Custom archive recording";
-}
-
-function getFallbackVideo(videoId) {
-  const normalized = sanitizeVideoId(videoId, DEFAULTS.videoId);
-  return FALLBACK_VIDEOS.find((video) => video.id === normalized);
-}
-
-function getActiveFallbackVideo() {
-  if (state.fallbackSource === "compilation") {
-    return CRASH_COMPILATION_VIDEOS[state.compilationIndex % CRASH_COMPILATION_VIDEOS.length] || getFallbackVideo(DEFAULTS.videoId);
-  }
-
-  if (state.fallbackSource === "random") {
-    return getFallbackVideo(state.randomVideoId) || getFallbackVideo(DEFAULTS.videoId);
-  }
-
-  return getFallbackVideo(state.videoId) || {
-    id: sanitizeVideoId(state.videoId, DEFAULTS.videoId),
-    title: getFallbackVideoTitle(state.videoId),
-    seconds: 0,
-    start: state.customStartSeconds
-  };
-}
-
-function getVideoStartSeconds(video) {
-  if (!state.skipIntros) return 0;
-  if (state.fallbackSource === "custom" && !getFallbackVideo(video.id)) {
-    return Math.round(numberInRange(state.customStartSeconds, 0, 90, DEFAULTS.customStartSeconds));
-  }
-  return Math.round(numberInRange(video.start || 0, 0, Math.max(0, video.seconds - MIN_COMPILATION_RUNTIME_SECONDS), 0));
-}
-
-function getCompilationRuntimeSeconds(video) {
-  const startSeconds = getVideoStartSeconds(video);
-  return Math.max(MIN_COMPILATION_RUNTIME_SECONDS, (video.seconds || 0) - startSeconds);
-}
-
 function getVisualSettings() {
   if (state.overlayPreset === "custom") return state;
   return { ...state, ...PRESETS[state.overlayPreset] };
-}
-
-function buildEmbedUrl() {
-  if (state.mode === "image") {
-    return "about:blank";
-  }
-
-  const params = new URLSearchParams({
-    autoplay: "1",
-    mute: state.muted ? "1" : "0",
-    controls: state.controls ? "1" : "0",
-    disablekb: state.controls ? "0" : "1",
-    modestbranding: "1",
-    playsinline: "1",
-    rel: "0",
-    fs: "0",
-    iv_load_policy: "3"
-  });
-
-  if (window.location.origin && window.location.origin.startsWith("http")) {
-    params.set("origin", window.location.origin);
-  }
-
-  if (state.mode === "video") {
-    const video = getActiveFallbackVideo();
-    const videoId = sanitizeVideoId(video.id, DEFAULTS.videoId);
-    const startSeconds = getVideoStartSeconds(video);
-
-    if (startSeconds > 0) {
-      params.set("start", String(startSeconds));
-    }
-
-    if (state.fallbackSource === "compilation") {
-      if (video.seconds) {
-        params.set("end", String(video.seconds));
-      }
-    } else {
-      params.set("loop", "1");
-      params.set("playlist", videoId);
-    }
-
-    return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
-  }
-
-  return "about:blank";
 }
 
 function applyVisualState() {
@@ -375,6 +253,10 @@ function applyVisualState() {
     `${numberInRange(visual.edgePadding, 8, 72, DEFAULTS.edgePadding)}px`
   );
 
+  video.muted = state.muted;
+  video.loop = state.loopVideo;
+  video.controls = state.controls;
+
   frame.classList.toggle("fit-contain", state.fit === "contain");
   overlay.hidden = !visual.overlay;
   document.body.classList.toggle("controls-enabled", state.controls);
@@ -382,7 +264,6 @@ function applyVisualState() {
   document.body.classList.toggle("no-clock", !visual.showClock);
   document.body.classList.toggle("no-strip", !visual.showStrip);
   document.body.classList.toggle("strip-compact", visual.stripDensity === "compact");
-  document.body.classList.toggle("is-fallback", state.mode === "video");
   document.body.classList.toggle("is-image", state.mode === "image");
   for (const accent of ACCENTS) {
     document.body.classList.toggle(`accent-${accent}`, state.accent === accent);
@@ -391,22 +272,8 @@ function applyVisualState() {
     document.body.classList.toggle(`layout-${position}`, visual.overlayPosition === position);
   }
 
-  if (state.mode === "video") {
-    const video = getActiveFallbackVideo();
-    if (state.fallbackSource === "compilation") {
-      modeLabel.textContent = "Crash compilation reel";
-      signalHeading.textContent = "Now playing";
-      signalLabel.textContent = `${state.compilationIndex + 1}/${CRASH_COMPILATION_VIDEOS.length} - ${video.title}`;
-    } else if (state.fallbackSource === "random") {
-      modeLabel.textContent = "Random yovo68 archive";
-      signalHeading.textContent = "Archive";
-      signalLabel.textContent = video.title;
-    } else {
-      modeLabel.textContent = "Custom archive video";
-      signalHeading.textContent = "Archive";
-      signalLabel.textContent = getFallbackVideoTitle(state.videoId);
-    }
-  } else if (state.mode === "image") {
+  if (state.mode === "image") {
+    document.body.classList.remove("has-video");
     modeLabel.textContent = "Local still image";
     signalHeading.textContent = "Mode";
     signalLabel.textContent = "Wikimedia bridge photo";
@@ -415,31 +282,59 @@ function applyVisualState() {
   updateClock();
 }
 
-function refreshStream(force = false) {
-  const nextUrl = buildEmbedUrl();
+function showVideoSource(source) {
+  document.body.classList.remove("is-image");
+  document.body.classList.add("has-video");
+  modeLabel.textContent = "Local crash reel";
+  signalHeading.textContent = "Now playing";
+  signalLabel.textContent = getSourceLabel(source);
+}
 
-  if (streamLoadTimer) {
-    window.clearTimeout(streamLoadTimer);
-    streamLoadTimer = 0;
-  }
+function showVideoFallback(reason = "No local video loaded") {
+  video.removeAttribute("src");
+  video.load();
+  document.body.classList.remove("has-video");
+  document.body.classList.add("is-image");
+  modeLabel.textContent = "Local still image";
+  signalHeading.textContent = state.mode === "image" ? "Mode" : "Video";
+  signalLabel.textContent = reason;
+}
 
+async function loadVideoSource(index = 0) {
   if (state.mode === "image") {
-    if (force || stream.getAttribute("src") !== "about:blank") {
-      stream.src = "about:blank";
-    }
-    applyVisualState();
+    showVideoFallback("Wikimedia bridge photo");
     return;
   }
 
-  if (force || stream.src !== nextUrl) {
-    stream.src = "about:blank";
-    streamLoadTimer = window.setTimeout(() => {
-      streamLoadTimer = 0;
-      stream.src = nextUrl;
-    }, EXTERNAL_STREAM_LOAD_DELAY_MS);
+  pendingSources = await filterAvailableSources(getVideoSources());
+  activeSourceIndex = index;
+
+  if (!pendingSources.length) {
+    showVideoFallback("Add a local crash reel file");
+    return;
   }
 
+  const source = pendingSources[activeSourceIndex];
+  video.src = source;
+  video.load();
+  showVideoSource(source);
+  const playPromise = video.play();
+  if (playPromise && typeof playPromise.catch === "function") {
+    playPromise.catch(() => {});
+  }
+}
+
+function tryNextVideoSource() {
+  if (activeSourceIndex + 1 < pendingSources.length) {
+    void loadVideoSource(activeSourceIndex + 1);
+    return;
+  }
+  showVideoFallback("Add assets/crash-reel.webm or pick a video file");
+}
+
+function refreshPlayback() {
   applyVisualState();
+  void loadVideoSource(0);
 }
 
 function updateClock() {
@@ -459,46 +354,32 @@ function updateClock() {
 }
 
 function applyWallpaperProperties(properties) {
-  const previousMode = state.mode;
-  const previousFallbackSource = state.fallbackSource;
-  const previousVideoId = state.videoId;
-  const previousSkipIntros = state.skipIntros;
-  const previousCustomStartSeconds = state.customStartSeconds;
+  let reloadVideo = false;
 
   if (properties.streammode) {
     state.mode = modeFromValue(properties.streammode.value);
+    reloadVideo = true;
   }
-  if (properties.videoid) {
-    state.videoId = sanitizeVideoId(properties.videoid.value, DEFAULTS.videoId);
+  if (properties.videosource) {
+    state.videoSource = optionFromValue(properties.videosource.value, VIDEO_SOURCES, DEFAULTS.videoSource);
+    reloadVideo = true;
   }
-  if (properties.fallbacksource) {
-    state.fallbackSource = optionFromValue(properties.fallbacksource.value, FALLBACK_SOURCES, DEFAULTS.fallbackSource);
+  if (properties.localvideofile) {
+    state.localVideoFile = properties.localvideofile.value || "";
+    reloadVideo = true;
   }
-  if (properties.autorotatefallback) {
-    state.rotateFallback = boolFromWallpaper(properties.autorotatefallback.value);
-    lastRotationAt = Date.now();
-  }
-  if (properties.fallbackrotateminutes) {
-    state.rotateMinutes = numberInRange(properties.fallbackrotateminutes.value, 5, 90, DEFAULTS.rotateMinutes);
-    lastRotationAt = Date.now();
-  }
-  if (properties.skipintros) {
-    state.skipIntros = boolFromWallpaper(properties.skipintros.value);
-  }
-  if (properties.customstartseconds) {
-    state.customStartSeconds = numberInRange(properties.customstartseconds.value, 0, 90, DEFAULTS.customStartSeconds);
-  }
-  if (properties.overlaypreset) {
-    state.overlayPreset = optionFromValue(properties.overlaypreset.value, OVERLAY_PRESETS, DEFAULTS.overlayPreset);
-  }
-  if (properties.overlayposition) {
-    state.overlayPosition = optionFromValue(properties.overlayposition.value, OVERLAY_POSITIONS, DEFAULTS.overlayPosition);
+  if (properties.bundledvideofiles) {
+    state.bundledVideoFiles = properties.bundledvideofiles.value || DEFAULTS.bundledVideoFiles;
+    reloadVideo = true;
   }
   if (properties.videofit) {
     state.fit = properties.videofit.value === "contain" ? "contain" : "cover";
   }
-  if (properties.youtubecontrols) {
-    state.controls = boolFromWallpaper(properties.youtubecontrols.value);
+  if (properties.videocontrols) {
+    state.controls = boolFromWallpaper(properties.videocontrols.value);
+  }
+  if (properties.loopvideo) {
+    state.loopVideo = boolFromWallpaper(properties.loopvideo.value);
   }
   if (properties.showoverlay) {
     state.overlay = boolFromWallpaper(properties.showoverlay.value);
@@ -511,6 +392,12 @@ function applyWallpaperProperties(properties) {
   }
   if (properties.showinfostrip) {
     state.showStrip = boolFromWallpaper(properties.showinfostrip.value);
+  }
+  if (properties.overlaypreset) {
+    state.overlayPreset = optionFromValue(properties.overlaypreset.value, OVERLAY_PRESETS, DEFAULTS.overlayPreset);
+  }
+  if (properties.overlayposition) {
+    state.overlayPosition = optionFromValue(properties.overlayposition.value, OVERLAY_POSITIONS, DEFAULTS.overlayPosition);
   }
   if (properties.overlayopacity) {
     state.overlayOpacity = numberInRange(properties.overlayopacity.value, 0, 100, DEFAULTS.overlayOpacity);
@@ -540,54 +427,22 @@ function applyWallpaperProperties(properties) {
     state.muted = boolFromWallpaper(properties.muted.value);
   }
 
-  if (
-    state.mode !== previousMode ||
-    state.fallbackSource !== previousFallbackSource ||
-    state.videoId !== previousVideoId ||
-    state.skipIntros !== previousSkipIntros ||
-    state.customStartSeconds !== previousCustomStartSeconds
-  ) {
-    lastRotationAt = Date.now();
-    activeVideoStartedAt = Date.now();
+  applyVisualState();
+  if (reloadVideo) {
+    void loadVideoSource(0);
   }
-
-  refreshStream();
 }
 
-function rotateRandomFallback() {
-  const next = pickDifferentFallbackVideo(state.randomVideoId);
-  state.randomVideoId = next.id;
-  state.randomVideoTitle = next.title;
-  lastRotationAt = Date.now();
-  refreshStream(true);
-}
-
-function advanceCompilationVideo() {
-  state.compilationIndex = (state.compilationIndex + 1) % CRASH_COMPILATION_VIDEOS.length;
-  activeVideoStartedAt = Date.now();
-  refreshStream(true);
-}
+video.addEventListener("loadeddata", () => {
+  showVideoSource(video.currentSrc || video.src);
+});
+video.addEventListener("error", tryNextVideoSource);
 
 Object.assign(state, getQueryOverrides());
 state.mode = modeFromValue(state.mode);
-refreshStream(true);
+refreshPlayback();
 updateClock();
 setInterval(updateClock, 1000 * 20);
-setInterval(() => {
-  if (state.mode === "video" && state.fallbackSource === "compilation") {
-    const video = getActiveFallbackVideo();
-    if (Date.now() - activeVideoStartedAt >= getCompilationRuntimeSeconds(video) * 1000) {
-      advanceCompilationVideo();
-    }
-    return;
-  }
-
-  const canRotate = state.mode === "video" && state.fallbackSource === "random" && state.rotateFallback;
-  if (!canRotate) return;
-  if (Date.now() - lastRotationAt >= state.rotateMinutes * 60 * 1000) {
-    rotateRandomFallback();
-  }
-}, COMPILATION_CHECK_INTERVAL_MS);
 
 window.wallpaperPropertyListener = {
   applyUserProperties: applyWallpaperProperties

@@ -1,4 +1,4 @@
-# 11 Foot 8 - Canopener Bridge Crash Reel Wallpaper
+# 11 Foot 8 - Canopener Bridge Local Crash Reel Wallpaper
 
 This folder is a Wallpaper Engine web wallpaper for the 11foot8+8 Canopener Bridge in Durham, NC.
 
@@ -10,32 +10,27 @@ This folder is a Wallpaper Engine web wallpaper for the 11foot8+8 Canopener Brid
 4. Select `index.html` from this folder.
 5. Save/apply the project.
 
-The default playback mode is **Crash archive reel (YouTube)**. It plays a curated yovo68 crash compilation reel and skips ahead past the intro portion on known videos.
+The default playback mode is **Local crash video**. It uses a native HTML video player and never embeds YouTube, so Wallpaper Engine does not show the Chromium sad-face iframe crash.
 
-The default archive source is **Crash compilation reel**. It cycles through 25 official yovo68 archive clips in sequence, using each video's verified duration to move to the next one. With intro skips enabled, the reel is about 32 minutes before it loops.
+Add your own authorized local crash compilation in either of these ways:
 
-For a no-video local mode, switch **Playback mode** to **Local still image (safe)**. That mode uses the bundled bridge photo at `assets/bridge-still.jpg`.
+- Put a video in this project as `assets/crash-reel.webm`, `assets/crash-reel.mp4`, or `assets/crash-reel.ogv`.
+- Or use the Wallpaper Engine setting **Local crash video file** to pick a local video file.
 
-The custom fallback video ID defaults to the 2020 compilation:
+There is also a short note at `assets/README-crash-reel.txt` inside the project folder.
 
-```text
--CmDZ-oEtB0
-```
-
-That compilation is 159 seconds long, so the default custom fallback will not loop immediately.
-
-Switch **Archive source** to **Custom video ID** if you want to always use that ID, or paste any other yovo68 video ID into **Custom archive YouTube video ID**. Use **Custom video start seconds** to skip ahead on custom videos.
+If no local video can be loaded, the wallpaper automatically falls back to the bundled bridge photo at `assets/bridge-still.jpg`.
 
 ## Wallpaper Engine Settings
 
-- **Playback mode**: crash archive reel, or local still image.
-- **Video fit**: crop to cover the screen, or show the full YouTube/still-image frame.
-- **Archive source**: crash compilation reel, random verified 30s+ yovo68 video, or your custom fallback video ID.
-- **Auto-rotate archive videos**: swaps to a different random archive video after the configured interval. The crash compilation reel advances automatically by clip duration.
-- **Archive rotation minutes**: how long each random archive video stays up before rotating.
-- **Skip video intros**: starts known yovo68 clips a few seconds in so the reel gets to the bridge action faster.
-- **Custom video start seconds**: intro skip amount for custom video IDs.
-- **Enable YouTube controls**: allows clicking the embedded player when you want controls.
+- **Playback mode**: local crash video, or local still image.
+- **Video source**: try the picked file first, use only the picked file, or use only bundled project files.
+- **Local crash video file**: pick a video through Wallpaper Engine. The file picker supports Wallpaper Engine's native web video formats.
+- **Bundled video filenames**: comma-separated project paths to try, defaulting to `assets/crash-reel.webm`, `assets/crash-reel.mp4`, and `assets/crash-reel.ogv`.
+- **Video fit**: crop to cover the screen, or show the full video/still-image frame.
+- **Enable video controls**: allows clicking the local video player when you want controls.
+- **Loop video**: loops the local crash reel.
+- **Mute video audio**: mutes the local video.
 - **Show all overlay**: master switch for the title, clock, and info strip.
 - **Overlay preset**: quick styles for compact, clean, info, minimal, full, cinema, or custom slider control.
 - **Overlay position**: split top/bottom layout, or dock the overlay in any screen corner.
@@ -50,9 +45,9 @@ Switch **Archive source** to **Custom video ID** if you want to always use that 
 
 ## Stability Notes
 
-The archive modes use an embedded YouTube player. On some Wallpaper Engine / GPU / CEF combinations, external video embeds can crash the Chromium renderer and show the sad-face page. This project keeps the local still-image mode available, removes GPU-heavy blur/backdrop CSS, and delays YouTube loading when switching modes.
+YouTube embeds have been removed. The screenshot-style sad face was coming from the embedded Chromium frame used for the external player. The wallpaper now uses only local assets: a native `<video>` element for the crash reel and a local bridge photo as fallback.
 
-If the sad face still appears, reload the wallpaper and switch **Playback mode** back to **Local still image (safe)** before trying archive video again.
+If a local video file is missing or unsupported, the wallpaper stays alive and shows the still image instead of a dead iframe.
 
 ## Workshop Package
 

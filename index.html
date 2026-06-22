@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#11100d">
     <title>11 Foot 8 - Canopener Bridge Crash Reel</title>
-    <link rel="stylesheet" href="styles.css?v=5">
+    <link rel="stylesheet" href="styles.css?v=6">
   </head>
   <body>
     <main class="wallpaper" aria-label="11 Foot 8 Canopener Bridge crash reel wallpaper">
@@ -16,13 +16,16 @@
           src="assets/bridge-still.jpg"
           alt="Norfolk Southern-Gregson Street Overpass"
           loading="eager">
-        <iframe
-          id="bridgeStream"
-          title="11 Foot 8 bridge stream"
-          src="about:blank"
-          allow="autoplay; encrypted-media; picture-in-picture"
-          referrerpolicy="strict-origin-when-cross-origin">
-        </iframe>
+        <video
+          id="bridgeVideo"
+          class="local-video"
+          title="11 Foot 8 bridge crash reel"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="auto">
+        </video>
       </div>
 
       <div class="ambient" aria-hidden="true">
@@ -64,6 +67,6 @@
       </section>
     </main>
 
-    <script src="script.js?v=5"></script>
+    <script src="script.js?v=6"></script>
   </body>
 </html>

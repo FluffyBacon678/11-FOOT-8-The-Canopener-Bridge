@@ -1,6 +1,6 @@
 {
   "title": "11 Foot 8 - Canopener Bridge Crash Reel",
-  "description": "A Wallpaper Engine web wallpaper for the 11foot8+8 Canopener Bridge in Durham, NC. Defaults to a rotating yovo68 archive crash compilation with intro skipping, with optional random archive, custom video, or local still image modes. Credit: Jurgen Henn / 11foot8.com / yovo68. Preview/local still photo: Washuotaku, CC BY-SA 4.0, via Wikimedia Commons.",
+  "description": "A Wallpaper Engine web wallpaper for the 11foot8+8 Canopener Bridge in Durham, NC. Plays a local crash-reel video file when provided, with a bundled bridge still image as the safe fallback. Credit: Jurgen Henn / 11foot8.com / yovo68. Preview/local still photo: Washuotaku, CC BY-SA 4.0, via Wikimedia Commons.",
   "type": "web",
   "file": "index.html",
   "preview": "preview.jpg",
@@ -20,54 +20,32 @@
         "type": "combo",
         "value": "video",
         "options": [
-          { "label": "Crash archive reel (YouTube)", "value": "video" },
+          { "label": "Local crash video", "value": "video" },
           { "label": "Local still image (safe)", "value": "image" }
         ]
       },
-      "videoid": {
+      "videosource": {
         "order": 20,
-        "text": "Custom archive YouTube video ID",
-        "type": "textinput",
-        "value": "-CmDZ-oEtB0"
-      },
-      "fallbacksource": {
-        "order": 25,
-        "text": "Archive source",
+        "text": "Video source",
         "type": "combo",
-        "value": "compilation",
+        "value": "auto",
         "options": [
-          { "label": "Crash compilation reel", "value": "compilation" },
-          { "label": "Random verified 30s+ video", "value": "random" },
-          { "label": "Custom video ID", "value": "custom" }
+          { "label": "Use picked file, then bundled files", "value": "auto" },
+          { "label": "Picked local file only", "value": "file" },
+          { "label": "Bundled project files only", "value": "bundled" }
         ]
       },
-      "autorotatefallback": {
-        "order": 26,
-        "text": "Auto-rotate archive videos",
-        "type": "bool",
-        "value": true
+      "localvideofile": {
+        "order": 30,
+        "text": "Local crash video file",
+        "type": "file",
+        "fileType": "video"
       },
-      "fallbackrotateminutes": {
-        "order": 27,
-        "text": "Archive rotation minutes",
-        "type": "slider",
-        "value": 20,
-        "min": 5,
-        "max": 90
-      },
-      "skipintros": {
-        "order": 28,
-        "text": "Skip video intros",
-        "type": "bool",
-        "value": true
-      },
-      "customstartseconds": {
-        "order": 29,
-        "text": "Custom video start seconds",
-        "type": "slider",
-        "value": 4,
-        "min": 0,
-        "max": 90
+      "bundledvideofiles": {
+        "order": 35,
+        "text": "Bundled video filenames",
+        "type": "textinput",
+        "value": "assets/crash-reel.webm, assets/crash-reel.mp4, assets/crash-reel.ogv"
       },
       "videofit": {
         "order": 40,
@@ -79,15 +57,21 @@
           { "label": "Show full frame", "value": "contain" }
         ]
       },
-      "youtubecontrols": {
+      "videocontrols": {
         "order": 50,
-        "text": "Enable YouTube controls",
+        "text": "Enable video controls",
         "type": "bool",
         "value": false
       },
+      "loopvideo": {
+        "order": 55,
+        "text": "Loop video",
+        "type": "bool",
+        "value": true
+      },
       "muted": {
         "order": 60,
-        "text": "Mute YouTube audio",
+        "text": "Mute video audio",
         "type": "bool",
         "value": true
       },

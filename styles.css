@@ -68,7 +68,7 @@ body.accent-red {
   background: #050504;
 }
 
-.video-frame iframe {
+.local-video {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -79,6 +79,11 @@ body.accent-red {
   border: 0;
   transform: translate(-50%, -50%);
   pointer-events: none;
+  opacity: 0;
+}
+
+body.has-video .local-video {
+  opacity: 1;
 }
 
 .local-still-image {
@@ -95,15 +100,15 @@ body.is-image .local-still-image {
   opacity: 1;
 }
 
-body.is-image .video-frame iframe {
+body.is-image .local-video {
   display: none;
 }
 
-body.controls-enabled .video-frame iframe {
+body.controls-enabled .local-video {
   pointer-events: auto;
 }
 
-.video-frame.fit-contain iframe {
+.video-frame.fit-contain .local-video {
   width: 100vw;
   height: 56.25vw;
   max-height: 100vh;
@@ -116,7 +121,7 @@ body.controls-enabled .video-frame iframe {
   place-items: center;
 }
 
-.video-frame.fit-contain iframe {
+.video-frame.fit-contain .local-video {
   position: static;
   transform: none;
 }
